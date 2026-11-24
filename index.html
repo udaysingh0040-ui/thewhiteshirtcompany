@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The White Shirt Company — A Statement In Every Stitch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="store.js"></script>
+  <style>
+    :root {
+      --forest: #0A4D34;
+      --forest-deep: #073826;
+      --cream: #F0EAD6;
+      --paper: #FAF8F1;
+      --charcoal: #2A2A28;
+      --gold: #C9B037;
+      --gold-soft: #E4D9A8;
+      --red: #a13a3a;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      background-color: var(--paper);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--gold); outline-offset: 2px;
+    }
+
+    .font-display {
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    /* ── Grain Overlay ─────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 76px;
+      background-color: var(--paper);
+      border-bottom: 1px solid rgba(10,77,52,0.14);
+    }
+
+    .nav__logo {
+      height: 42px;
+      width: 42px;
+      border-radius: 50%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .nav__links { display: flex; gap: 44px; }
+
+    .nav__links a {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      transition: color 0.25s ease;
+      position: relative;
+      padding-bottom: 3px;
+    }
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 100%; bottom: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: right 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .nav__links a:hover { color: var(--forest); }
+    .nav__links a:hover::after { right: 0; }
+    .nav__links a.active { color: var(--forest); }
+    .nav__links a.active::after { right: 0; background: var(--forest); }
+
+    .nav__right { display: flex; align-items: center; gap: 22px; }
+    .cart-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      color: var(--forest);
+    }
+    .cart-link:hover { opacity: 0.6; transform: translateY(-1px); }
+    .cart-link svg { width: 21px; height: 21px; }
+    .cart-badge {
+      position: absolute; top: -2px; right: -4px; background: var(--gold); color: var(--forest-deep);
+      font-size: 8px; font-weight: 700; width: 15px; height: 15px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transform: scale(0); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cart-badge.visible { transform: scale(1); }
+
+    .nav__cta {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.25s ease;
+    }
+    .nav__cta:hover { opacity: 0.55; }
+    .nav__cta::after { content: '→'; font-weight: 300; font-size: 13px; }
+
+    .nav__brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav__brand-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--forest);
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+    .nav__brand-name span {
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 8.5px;
+      letter-spacing: 0.32em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    .hero {
+      padding-top: 76px;
+      background-color: var(--paper);
+      position: relative;
+      border-bottom: 1px solid rgba(10,77,52,0.12);
+    }
+
+    .hero__title {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 700;
+      font-size: clamp(54px, 9.5vw, 148px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--forest);
+      padding: 20px 48px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .hero__title .accent { color: var(--gold); font-style: italic; font-weight: 400; }
+
+    .hero__body {
+      display: grid;
+      grid-template-columns: 210px 1fr 1fr 240px;
+      gap: 0;
+      margin-top: -32px;
+      position: relative;
+      align-items: stretch;
+    }
+
+    .hero__left-text {
+      padding: 0 0 52px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      z-index: 3;
+    }
+
+    .hero__center-image { position: relative; z-index: 1; }
+    .hero__center-image img {
+      width: 100%;
+      height: 620px;
+      object-fit: cover;
+      object-position: top center;
+      filter: grayscale(100%) contrast(1.03);
+      display: block;
+    }
+
+    .hero__center-image-2 { position: relative; z-index: 1; margin-top: 48px; }
+    .hero__center-image-2 img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      object-position: top;
+      filter: grayscale(100%) contrast(1.03);
+      display: block;
+    }
+
+    .hero__right-text { padding: 40px 48px 0 28px; z-index: 3; }
+
+    /* ── LABEL / BODY UTILITIES ───────────────────────────── */
+    .label-xs {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--forest);
+      margin-bottom: 8px; display: block;
+    }
+    .label-sm {
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--forest);
+      margin-bottom: 10px; display: block;
+    }
+    .heading-display {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 700; letter-spacing: 0.01em; line-height: 1.25;
+      margin-bottom: 12px; color: var(--charcoal);
+    }
+    .body-sm { font-size: 12px; line-height: 1.85; color: rgba(42,42,40,0.66); font-weight: 300; }
+
+    /* ── DEEPER LOOK ──────────────────────────────────────── */
+    .deeper { padding: 80px 48px; background-color: var(--paper); }
+    .deeper__heading {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(26px, 3.6vw, 50px);
+      font-weight: 700; letter-spacing: -0.01em; line-height: 1.15;
+      max-width: 660px; margin-bottom: 52px; color: var(--forest);
+    }
+    .deeper__images { display: grid; grid-template-columns: 1.15fr 0.9fr 1fr; gap: 14px; align-items: start; }
+    .deeper__img-wrap { overflow: hidden; }
+    .deeper__img-wrap img {
+      width: 100%; object-fit: cover; object-position: top center;
+      filter: grayscale(100%);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .deeper__img-wrap:hover img { transform: scale(1.03); }
+    .deeper__img-wrap:nth-child(1) img { height: 600px; }
+    .deeper__img-wrap:nth-child(2) { margin-top: 72px; }
+    .deeper__img-wrap:nth-child(2) img { height: 490px; }
+    .deeper__img-wrap:nth-child(3) { margin-top: 36px; }
+    .deeper__img-wrap:nth-child(3) img { height: 530px; }
+
+    .deeper__text-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+      margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(10,77,52,0.14);
+    }
+
+    /* ── EDITORIAL ────────────────────────────────────────── */
+    .editorial {
+      background-color: var(--forest);
+      color: var(--cream);
+      padding: 96px 48px;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 480px;
+    }
+    .editorial__side-img { position: absolute; bottom: 0; width: 21%; filter: grayscale(100%); opacity: 0.5; }
+    .editorial__side-img--left { left: 0; }
+    .editorial__side-img--right { right: 0; }
+    .editorial__side-img img { width: 100%; height: 440px; object-fit: cover; object-position: top; display: block; }
+
+    .editorial__content { position: relative; z-index: 2; text-align: center; max-width: 780px; }
+    .editorial__title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(40px, 6.8vw, 92px);
+      font-weight: 700; line-height: 1.02; letter-spacing: -0.02em;
+    }
+    .editorial__title em { color: var(--gold-soft); font-style: italic; font-weight: 400; }
+
+    .editorial__side-caption {
+      position: absolute; right: 22%; bottom: 40px;
+      font-size: 11.5px; line-height: 1.7; max-width: 170px;
+      color: rgba(240,234,214,0.55); text-align: left;
+    }
+
+    /* ── IMAGE STRIP ──────────────────────────────────────── */
+    .strip {
+      background-color: var(--paper); overflow: hidden; padding: 0;
+      border-top: 1px solid rgba(10,77,52,0.12); border-bottom: 1px solid rgba(10,77,52,0.12);
+    }
+    .strip__inner { display: flex; animation: strip-scroll 44s linear infinite; width: max-content; }
+    .strip__img {
+      width: 138px; height: 196px; object-fit: cover; object-position: top;
+      filter: grayscale(100%); flex-shrink: 0; border-right: 3px solid var(--paper);
+    }
+    @keyframes strip-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── THE TWO SHIRTS (All Looks equivalent) ────────────── */
+    .all-looks { padding: 80px 48px; background-color: var(--paper); }
+    .all-looks__heading {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(20px, 2.8vw, 34px); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 48px; color: var(--forest);
+    }
+    .all-looks__grid { display: grid; grid-template-columns: 210px 1fr 176px; gap: 28px; align-items: start; }
+    .all-looks__meta { display: flex; flex-direction: column; gap: 22px; padding-top: 4px; }
+    .meta-label {
+      font-size: 9px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(42,42,40,0.4); margin-bottom: 2px; display: block;
+    }
+    .meta-value { font-family: 'Times New Roman', Times, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.02em; color: var(--forest); }
+    .all-looks__desc { font-size: 11.5px; line-height: 1.8; color: rgba(42,42,40,0.58); margin-top: 8px; }
+    .all-looks__nav-row {
+      margin-top: 20px; display: flex; align-items: center; gap: 14px;
+      font-size: 11px; letter-spacing: 0.12em; color: rgba(42,42,40,0.5);
+    }
+    .all-looks__nav-row button { font-size: 15px; color: var(--forest); transition: opacity 0.2s; padding: 2px 0; }
+    .all-looks__nav-row button:hover { opacity: 0.5; }
+
+    .all-looks__main-img { overflow: hidden; background: var(--cream); }
+    .all-looks__main-img img {
+      width: 100%; height: 680px; object-fit: cover; object-position: top center;
+      filter: grayscale(100%);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+    }
+    .all-looks__main-img:hover img { transform: scale(1.02); }
+
+    .all-looks__thumbs { display: flex; flex-direction: column; gap: 7px; }
+    .all-looks__thumb { overflow: hidden; cursor: pointer; }
+    .all-looks__thumb img {
+      width: 100%; height: 218px; object-fit: cover; object-position: top;
+      filter: grayscale(100%);
+      transition: opacity 0.25s ease, transform 0.4s ease;
+    }
+    .all-looks__thumb:hover img { opacity: 0.75; transform: scale(1.03); }
+    .all-looks__thumb.active img { opacity: 1; outline: 2px solid var(--forest); outline-offset: -2px; }
+
+    /* ── OUR FABRICS PREVIEW ──────────────────────────────── */
+    .previous { padding: 80px 48px; background-color: var(--cream); }
+    .previous__heading {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(20px, 2.8vw, 34px); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin-bottom: 44px; color: var(--forest);
+    }
+    .previous__track { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .previous__card { flex: 0 0 auto; width: 320px; cursor: pointer; }
+    .previous__card-imgwrap { overflow: hidden; position: relative; }
+    .previous__card-imgwrap img {
+      width: 100%; height: 400px; object-fit: cover;
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .previous__card:hover .previous__card-imgwrap img { transform: scale(1.04); }
+    .previous__card-info { padding: 18px 4px 0; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(10,77,52,0.15); padding-bottom: 16px; }
+    .previous__card-name {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 20px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--forest);
+    }
+    .previous__card-season { font-size: 10px; letter-spacing: 0.16em; color: rgba(42,42,40,0.5); text-transform: uppercase; }
+
+    /* ── CTA ──────────────────────────────────────────────── */
+    .cta-section {
+      background-color: var(--forest); color: var(--cream); position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; min-height: 360px; padding: 80px 48px;
+    }
+    .cta-section__side-img { position: absolute; bottom: 0; width: 260px; filter: grayscale(100%); opacity: 0.45; }
+    .cta-section__side-img--left { left: 0; }
+    .cta-section__side-img--right { right: 0; }
+    .cta-section__side-img img { width: 100%; height: 340px; object-fit: cover; object-position: top; }
+    .cta-section__content { position: relative; z-index: 2; text-align: center; }
+    .cta-section__link {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(28px, 4vw, 52px); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 18px; transition: opacity 0.25s ease; color: var(--cream);
+    }
+    .cta-section__link:hover { opacity: 0.7; }
+    .cta-section__arrow { font-weight: 200; transition: transform 0.3s ease; color: var(--gold); }
+    .cta-section__link:hover .cta-section__arrow { transform: translateX(6px); }
+
+    /* ── TICKER ───────────────────────────────────────────── */
+    .ticker { background-color: var(--forest-deep); overflow: hidden; padding: 13px 0; border-top: 1px solid rgba(240,234,214,0.1); }
+    .ticker__inner { display: flex; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+    .ticker__item {
+      font-size: 10.5px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(240,234,214,0.7); padding: 0 36px; flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 20px;
+    }
+    .ticker__dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    .footer {
+      background-color: var(--forest-deep); color: var(--cream);
+      padding: 56px 48px 44px; display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 48px; border-top: 1px solid rgba(240,234,214,0.08);
+    }
+    .footer__brand { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .footer__brand img { height: 46px; width: 46px; border-radius: 50%; }
+    .footer__brand-name { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer__tagline { font-size: 11px; letter-spacing: 0.12em; color: var(--gold-soft); max-width: 260px; }
+    .footer__col-title { font-size: 9px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.4); margin-bottom: 22px; }
+    .footer__link { font-size: 12px; font-weight: 300; letter-spacing: 0.05em; color: rgba(240,234,214,0.78); line-height: 1.7; transition: color 0.2s ease; display: block; }
+    .footer__link:hover { color: var(--gold-soft); }
+    .footer__links { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── SCROLL FADE ──────────────────────────────────────── */
+    .fade-up.will-animate { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .fade-up.visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+    /* ── TOAST ─────────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px; background: var(--forest); color: var(--cream);
+      padding: 14px 22px; font-size: 12px; letter-spacing: 0.03em; z-index: 900;
+      opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+    }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── BUY BOX (Two Shirts section) ─────────────────────── */
+    .buy-box { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(10,77,52,0.14); }
+    .buy-box__price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .buy-box__price-now { font-family: 'Times New Roman', Times, serif; font-size: 22px; font-weight: 700; color: var(--forest); }
+    .buy-box__price-was { font-size: 13px; color: rgba(42,42,40,0.4); text-decoration: line-through; }
+    .buy-box__sizes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .buy-box__size-btn { padding: 7px 12px; font-size: 10.5px; border: 1px solid rgba(10,77,52,0.25); color: var(--charcoal); background: transparent; transition: all 0.18s ease; font-family: 'Jost', sans-serif; font-weight: 400; letter-spacing: 0.03em; }
+    .buy-box__size-btn:hover { border-color: var(--forest); }
+    .buy-box__size-btn.selected { background: var(--forest); color: var(--cream); border-color: var(--forest); }
+    .buy-box__btn { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 13px 16px; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'Jost', sans-serif; font-weight: 500; transition: background 0.2s ease; }
+    .buy-box__btn:hover { background: var(--forest-deep); }
+    .buy-box__btn:disabled { background: rgba(10,77,52,0.25); cursor: not-allowed; }
+    .buy-box__btn.shake { animation: buyShake 0.35s ease; }
+    @keyframes buyShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+    .buy-box__soldout { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); margin-bottom: 14px; display: block; }
+
+    /* ── HAMBURGER ─────────────────────────────────────────── */
+    .nav__hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 8px 4px; color: var(--forest);
+    }
+    .nav__hamburger span { display: block; width: 22px; height: 1.5px; background: currentColor; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .nav__hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav__hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── MOBILE MENU ───────────────────────────────────────── */
+    body.menu-open { overflow: hidden; }
+    .mobile-menu {
+      position: fixed; inset: 0; background: var(--forest); z-index: 490;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      opacity: 0; pointer-events: none; transform: translateY(-16px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .mobile-menu__links { display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; padding: 0 40px; }
+    .mobile-menu__links a {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 36px; font-weight: 400; letter-spacing: 0.02em;
+      color: rgba(240,234,214,0.85); text-decoration: none; padding: 14px 0;
+      border-bottom: 1px solid rgba(240,234,214,0.12); width: 100%; text-align: center; transition: color 0.2s ease;
+    }
+    .mobile-menu__links a:first-child { border-top: 1px solid rgba(240,234,214,0.12); }
+    .mobile-menu__links a:hover { color: var(--gold-soft); }
+    .mobile-menu__footer { position: absolute; bottom: 36px; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.3); }
+
+    /* ── MOBILE RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav { padding: 0 20px; }
+      .nav__links { display: none !important; }
+      .nav__cta { display: none !important; }
+      .nav__hamburger { display: flex; }
+
+      .hero__title { padding: 24px 20px 0; font-size: clamp(48px, 13vw, 84px); }
+      .hero__body { grid-template-columns: 1fr; margin-top: 16px; }
+      .hero__left-text { order: 3; padding: 20px 20px 32px; }
+      .hero__center-image { order: 1; }
+      .hero__center-image img { height: 420px; }
+      .hero__center-image-2 { display: none; }
+      .hero__right-text { order: 2; padding: 24px 20px 0; }
+
+      .deeper { padding: 56px 20px; }
+      .deeper__heading { margin-bottom: 32px; }
+      .deeper__images { grid-template-columns: 1fr; gap: 10px; }
+      .deeper__img-wrap:nth-child(1) img { height: 400px; }
+      .deeper__img-wrap:nth-child(2) { margin-top: 0; }
+      .deeper__img-wrap:nth-child(2) img { height: 400px; }
+      .deeper__img-wrap:nth-child(3) { margin-top: 0; }
+      .deeper__img-wrap:nth-child(3) img { height: 400px; }
+      .deeper__text-row { grid-template-columns: 1fr; gap: 20px; margin-top: 36px; padding-top: 28px; }
+
+      .editorial { padding: 64px 20px; min-height: 320px; }
+      .editorial__side-img { display: none; }
+      .editorial__side-caption { display: none; }
+      .editorial__title { font-size: clamp(36px, 10vw, 56px); }
+
+      .all-looks { padding: 56px 20px; }
+      .all-looks__grid { grid-template-columns: 1fr; gap: 20px; }
+      .all-looks__main-img img { height: 460px; }
+      .all-looks__thumbs { flex-direction: row; overflow-x: auto; scrollbar-width: none; gap: 6px; }
+      .all-looks__thumbs::-webkit-scrollbar { display: none; }
+      .all-looks__thumb img { height: 110px; width: 80px; }
+
+      .previous { padding: 56px 20px; }
+      .previous__card { width: 100%; max-width: 340px; }
+      .previous__card-imgwrap img { height: 300px; }
+
+      .cta-section { padding: 72px 20px; }
+      .cta-section__side-img { display: none; }
+
+      .footer { grid-template-columns: 1fr; padding: 40px 20px; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="index.html" class="nav__brand-wrap">
+      <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company" class="nav__logo">
+      <span class="nav__brand-name">WSC<span>The White Shirt Co.</span></span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="fabrics.html">Fabrics</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <div class="nav__right">
+      <a href="catalogue.html" class="nav__cta">Shop Now</a>
+      <a href="catalogue.html" class="cart-link" title="View Cart" id="nav-cart-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="nav-cart-badge">0</span>
+      </a>
+      <button class="nav__hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__links">
+      <a href="index.html" onclick="toggleMobileMenu()">Home</a>
+      <a href="about.html" onclick="toggleMobileMenu()">About</a>
+      <a href="catalogue.html" onclick="toggleMobileMenu()">Catalogue</a>
+      <a href="fabrics.html" onclick="toggleMobileMenu()">Fabrics</a>
+      <a href="contact.html" onclick="toggleMobileMenu()">Contact Us</a>
+    </div>
+    <p class="mobile-menu__footer">The White Shirt Company — A Statement In Every Stitch</p>
+  </div>
+
+  <main>
+
+    <!-- ─── HERO ─────────────────────────────────────── -->
+    <section class="hero">
+      <h1 class="hero__title">WHITE SHIRT<br><span class="accent">Company</span></h1>
+      <div class="hero__body">
+        <div class="hero__left-text">
+          <span class="label-sm">Our Craft</span>
+          <p class="body-sm">White is not a shade to us — it is a standard. Every shirt we make exists in exactly two forms: pure cotton and breathable linen. Nothing else earns a place in our workshop.</p>
+        </div>
+        <div class="hero__center-image">
+          <img src="website_images/bd2ae5ec3775e588d3e1aff0162b2999.jpg" alt="The White Shirt Company — cotton shirt">
+        </div>
+        <div class="hero__center-image-2">
+          <img src="website_images/dc9423509aef9ee91e6ba440bd472698.jpg" alt="The White Shirt Company — collar detail">
+        </div>
+        <div class="hero__right-text">
+          <span class="label-sm">A Statement In Every Stitch</span>
+          <p class="heading-display">Two Fabrics.<br>One Standard.</p>
+          <p class="body-sm">Our shirt is cut in a single, considered silhouette — offered only in crisp cotton or softly textured linen. No seasons, no trends. Just the one garment, made properly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DEEPER LOOK ───────────────────────────────── -->
+    <section class="deeper fade-up">
+      <h2 class="deeper__heading">A Deeper Look Into Our Craft</h2>
+      <div class="deeper__images">
+        <div class="deeper__img-wrap">
+          <img src="website_images/cabb479a02e9b43b798a8507df8cc1f3.jpg" alt="Linen white shirt, full look">
+        </div>
+        <div class="deeper__img-wrap">
+          <img src="website_images/358ecd41c1c95b9c9df18e3a847cf376.jpg" alt="White shirt, coastal setting">
+        </div>
+        <div class="deeper__img-wrap">
+          <img src="website_images/860a73d46aa42e28de284ce55721c31c.jpg" alt="White shirt, collar detail in light">
+        </div>
+      </div>
+      <div class="deeper__text-row">
+        <div>
+          <span class="label-sm">Highlights</span>
+          <p class="body-sm">One silhouette, two fabrics: a crisp 100% cotton poplin built for structure, and a softly textured linen built for ease. Both cut from the same considered pattern.</p>
+        </div>
+        <div></div>
+        <div>
+          <span class="label-sm">Design Philosophy</span>
+          <p class="body-sm">We chose to make one shirt well rather than many shirts adequately. Every seam, button, and collar point exists because it earned its place — nothing more.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EDITORIAL STATEMENT ───────────────────────── -->
+    <section class="editorial">
+      <div class="editorial__side-img editorial__side-img--left">
+        <img src="website_images/ca007e292662ceafe9aac5e61908b230.jpg" alt="">
+      </div>
+      <div class="editorial__content">
+        <h2 class="editorial__title">
+          The White Shirt<br>Is the <em>Only</em><br>Shirt You Need
+        </h2>
+      </div>
+      <div class="editorial__side-caption">
+        Two fabrics. One silhouette. Proof that restraint is its own kind of luxury.
+      </div>
+      <div class="editorial__side-img editorial__side-img--right">
+        <img src="website_images/b776d7041bf124ca81d3f664eb61adf3.jpg" alt="">
+      </div>
+    </section>
+
+    <!-- ─── IMAGE STRIP ───────────────────────────────── -->
+    <div class="strip">
+      <div class="strip__inner">
+        <img class="strip__img" src="website_images/bd2ae5ec3775e588d3e1aff0162b2999.jpg" alt="">
+        <img class="strip__img" src="website_images/cabb479a02e9b43b798a8507df8cc1f3.jpg" alt="">
+        <img class="strip__img" src="website_images/dc9423509aef9ee91e6ba440bd472698.jpg" alt="">
+        <img class="strip__img" src="website_images/358ecd41c1c95b9c9df18e3a847cf376.jpg" alt="">
+        <img class="strip__img" src="website_images/860a73d46aa42e28de284ce55721c31c.jpg" alt="">
+        <img class="strip__img" src="website_images/a634a209c941fa266a1fd11bcfd71014.jpg" alt="">
+        <img class="strip__img" src="website_images/b776d7041bf124ca81d3f664eb61adf3.jpg" alt="">
+        <img class="strip__img" src="website_images/c76e57de4f4b8ffe169a7037f5ef3555.jpg" alt="">
+        <img class="strip__img" src="website_images/ca007e292662ceafe9aac5e61908b230.jpg" alt="">
+        <!-- duplicate for seamless loop -->
+        <img class="strip__img" src="website_images/bd2ae5ec3775e588d3e1aff0162b2999.jpg" alt="">
+        <img class="strip__img" src="website_images/cabb479a02e9b43b798a8507df8cc1f3.jpg" alt="">
+        <img class="strip__img" src="website_images/dc9423509aef9ee91e6ba440bd472698.jpg" alt="">
+        <img class="strip__img" src="website_images/358ecd41c1c95b9c9df18e3a847cf376.jpg" alt="">
+        <img class="strip__img" src="website_images/860a73d46aa42e28de284ce55721c31c.jpg" alt="">
+        <img class="strip__img" src="website_images/a634a209c941fa266a1fd11bcfd71014.jpg" alt="">
+        <img class="strip__img" src="website_images/b776d7041bf124ca81d3f664eb61adf3.jpg" alt="">
+        <img class="strip__img" src="website_images/c76e57de4f4b8ffe169a7037f5ef3555.jpg" alt="">
+        <img class="strip__img" src="website_images/ca007e292662ceafe9aac5e61908b230.jpg" alt="">
+      </div>
+    </div>
+
+    <!-- ─── THE TWO SHIRTS ─────────────────────────────── -->
+    <section class="all-looks fade-up">
+      <h2 class="all-looks__heading">The Two Shirts</h2>
+      <div class="all-looks__grid">
+
+        <div class="all-looks__meta">
+          <div>
+            <span class="meta-label">Style</span>
+            <p class="meta-value">Classic Fit Shirt</p>
+          </div>
+          <div>
+            <span class="meta-label">Fabric</span>
+            <p class="meta-value" id="fabricCounter">01 — Cotton</p>
+          </div>
+          <div>
+            <span class="meta-label">Colour</span>
+            <p class="meta-value">White. Only White.</p>
+          </div>
+          <p class="all-looks__desc" id="fabricDesc">A crisp, long-staple cotton poplin — structured, breathable, and built to hold a clean line through a long day.</p>
+          <div class="all-looks__nav-row">
+            <button onclick="selectFabric(0)">←</button>
+            <span id="fabricNav">01 / 02</span>
+            <button onclick="selectFabric(1)">→</button>
+          </div>
+          <div class="buy-box" id="buyBox"></div>
+        </div>
+
+        <div class="all-looks__main-img" id="mainLookImg">
+          <img src="website_images/ca007e292662ceafe9aac5e61908b230.jpg" alt="Cotton white shirt" id="mainLookImgEl">
+        </div>
+
+        <div class="all-looks__thumbs">
+          <div class="all-looks__thumb active" onclick="selectFabric(0)">
+            <img src="website_images/bd2ae5ec3775e588d3e1aff0162b2999.jpg" alt="Cotton white shirt detail">
+          </div>
+          <div class="all-looks__thumb" onclick="selectFabric(1)">
+            <img src="website_images/cabb479a02e9b43b798a8507df8cc1f3.jpg" alt="Linen white shirt detail">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── OUR FABRICS PREVIEW ────────────────────────── -->
+    <section class="previous fade-up">
+      <h2 class="previous__heading">Our Fabrics</h2>
+      <div class="previous__track">
+        <a href="fabrics.html" class="previous__card">
+          <div class="previous__card-imgwrap">
+            <img src="website_images/giza-cotton.jpg" alt="Cotton fabric swatch">
+          </div>
+          <div class="previous__card-info">
+            <span class="previous__card-name">Cotton</span>
+            <span class="previous__card-season">Structured &amp; Crisp</span>
+          </div>
+        </a>
+        <a href="fabrics.html" class="previous__card">
+          <div class="previous__card-imgwrap">
+            <img src="website_images/linen.jpg" alt="Linen fabric swatch">
+          </div>
+          <div class="previous__card-info">
+            <span class="previous__card-name">Linen</span>
+            <span class="previous__card-season">Soft &amp; Breathable</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ─── CTA ───────────────────────────────────────── -->
+    <section class="cta-section">
+      <div class="cta-section__side-img cta-section__side-img--left">
+        <img src="website_images/c76e57de4f4b8ffe169a7037f5ef3555.jpg" alt="">
+      </div>
+      <div class="cta-section__content">
+        <a href="catalogue.html" class="cta-section__link">
+          Shop The Shirt <span class="cta-section__arrow">→</span>
+        </a>
+      </div>
+      <div class="cta-section__side-img cta-section__side-img--right">
+        <img src="website_images/a634a209c941fa266a1fd11bcfd71014.jpg" alt="">
+      </div>
+    </section>
+
+    <!-- ─── TICKER ────────────────────────────────────── -->
+    <div class="ticker">
+      <div class="ticker__inner">
+        <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+        <span class="ticker__item">One Standard <span class="ticker__dot"></span></span>
+        <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+        <span class="ticker__item">One Standard <span class="ticker__dot"></span></span>
+        <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+        <span class="ticker__item">One Standard <span class="ticker__dot"></span></span>
+        <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+        <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+        <span class="ticker__item">One Standard <span class="ticker__dot"></span></span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────── -->
+  <footer class="footer">
+    <div>
+      <div class="footer__brand">
+        <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company">
+        <span class="footer__brand-name">The White Shirt Co.</span>
+      </div>
+      <p class="footer__tagline">A statement in every stitch. One silhouette, two fabrics, no compromises.</p>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigate</p>
+      <div class="footer__links">
+        <a href="about.html" class="footer__link">About</a>
+        <a href="catalogue.html" class="footer__link">Catalogue</a>
+        <a href="fabrics.html" class="footer__link">Fabrics</a>
+        <a href="contact.html" class="footer__link">Contact Us</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <div class="footer__links">
+        <a href="mailto:Support@thewhiteshirtcompany.in" class="footer__link">Support@thewhiteshirtcompany.in</a>
+        <a href="tel:+919034509969" class="footer__link">+91 90345 09969</a>
+        <a href="tel:+918168318654" class="footer__link">+91 81683 18654</a>
+        <a href="https://www.thewhiteshirtcompany.in" target="_blank" rel="noopener" class="footer__link">www.thewhiteshirtcompany.in</a>
+        <a href="https://www.instagram.com/thewhiteshirt_company" target="_blank" rel="noopener" class="footer__link">@thewhiteshirt_company</a>
+      </div>
+    </div>
+    <div style="grid-column:1/-1;border-top:1px solid rgba(240,234,214,0.08);padding-top:20px;display:flex;justify-content:flex-end;">
+      <a href="admin.html" style="font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,234,214,0.2);transition:color 0.25s ease;" onmouseover="this.style.color='rgba(240,234,214,0.55)'" onmouseout="this.style.color='rgba(240,234,214,0.2)'">Admin</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('navHamburger').classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    }
+
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('will-animate'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── THE TWO SHIRTS — sourced live from the shared product store, so admin
+    // edits (price, discount, stock, main photo) show up here too. ─────────
+    const homeFabricIds = ['cotton-shirt', 'linen-shirt'];
+    const homeFabricLabels = ['Cotton', 'Linen'];
+    let allProducts = wscLoadProducts();
+    const fabrics = homeFabricIds
+      .map(id => allProducts.find(p => p.id === id))
+      .filter(Boolean);
+
+    let currentFabricIdx = 0;
+
+    function renderBuyBox(product) {
+      const discounted = wscDiscountedPrice(product.priceInr, product.discountPct);
+      const hasDiscount = product.discountPct > 0;
+      const priceHtml = hasDiscount
+        ? `<span class="buy-box__price-was">₹${product.priceInr.toLocaleString('en-IN')}</span><span class="buy-box__price-now">₹${discounted.toLocaleString('en-IN')}</span>`
+        : `<span class="buy-box__price-now">₹${product.priceInr.toLocaleString('en-IN')}</span>`;
+
+      if (product.inStock === false) {
+        document.getElementById('buyBox').innerHTML = `
+          <div class="buy-box__price">${priceHtml}</div>
+          <span class="buy-box__soldout">Currently Out of Stock</span>
+          <button class="buy-box__btn" disabled>Sold Out</button>
+        `;
+        return;
+      }
+
+      const sizesHtml = product.sizes.map(s => `<button class="buy-box__size-btn" data-home-size="${s}">${s}</button>`).join('');
+      document.getElementById('buyBox').innerHTML = `
+        <div class="buy-box__price">${priceHtml}</div>
+        <div class="buy-box__sizes">${sizesHtml}</div>
+        <button class="buy-box__btn" id="homeAddToCartBtn">Add to Cart</button>
+      `;
+    }
+
+    function selectFabric(i) {
+      currentFabricIdx = i;
+      const product = fabrics[i];
+      if (!product) return;
+      document.getElementById('fabricCounter').textContent = String(i + 1).padStart(2, '0') + ' — ' + homeFabricLabels[i];
+      document.getElementById('fabricDesc').textContent = product.desc;
+      document.getElementById('fabricNav').textContent = (i === 0 ? '01 / 02' : '02 / 02');
+      document.getElementById('mainLookImgEl').src = product.gallery[0];
+      document.querySelectorAll('.all-looks__thumb').forEach((t, idx) => t.classList.toggle('active', idx === i));
+      renderBuyBox(product);
+    }
+
+    if (fabrics.length) selectFabric(0);
+
+    document.addEventListener('click', e => {
+      const sizeBtn = e.target.closest('[data-home-size]');
+      if (sizeBtn) {
+        document.querySelectorAll('.buy-box__size-btn').forEach(b => b.classList.remove('selected'));
+        sizeBtn.classList.add('selected');
+      }
+    });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#homeAddToCartBtn')) return;
+      const product = fabrics[currentFabricIdx];
+      const btn = e.target.closest('#homeAddToCartBtn');
+      const selectedSize = document.querySelector('.buy-box__size-btn.selected');
+
+      if (!selectedSize) {
+        btn.classList.add('shake');
+        btn.textContent = 'Select a size';
+        setTimeout(() => { btn.classList.remove('shake'); btn.textContent = 'Add to Cart'; }, 1400);
+        return;
+      }
+
+      const size = selectedSize.dataset.homeSize;
+      const effectivePriceInr = wscDiscountedPrice(product.priceInr, product.discountPct);
+      const cart = wscLoadCart();
+      const existing = cart.find(i => i.id === product.id && i.size === size);
+      if (existing) existing.qty += 1;
+      else cart.push({ ...product, photo: product.gallery[0], priceInr: effectivePriceInr, size, qty: 1 });
+      wscSaveCart(cart);
+      updateNavCartBadge();
+      showToast(product.name + ' (' + size + ') added to cart');
+    });
+
+    function updateNavCartBadge() {
+      const badge = document.getElementById('nav-cart-badge');
+      if (!badge) return;
+      const count = wscCartCount();
+      badge.textContent = count;
+      badge.classList.toggle('visible', count > 0);
+    }
+    updateNavCartBadge();
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('visible'), 2200);
+    }
+  </script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

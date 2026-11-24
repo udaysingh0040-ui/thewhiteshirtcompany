@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — The White Shirt Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="store.js"></script>
+  <style>
+    :root {
+      --forest: #0A4D34;
+      --forest-deep: #073826;
+      --cream: #F0EAD6;
+      --paper: #FAF8F1;
+      --charcoal: #2A2A28;
+      --gold: #C9B037;
+      --gold-soft: #E4D9A8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; background-color: var(--paper); color: var(--charcoal); overflow-x: hidden; line-height: 1.7; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--gold); outline-offset: 2px;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: 0.4;
+    }
+
+    /* NAV */
+    .nav { position: fixed; inset: 0 0 auto 0; z-index: 500; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 76px; background-color: var(--paper); border-bottom: 1px solid rgba(10,77,52,0.14); }
+    .nav__logo { height: 42px; width: 42px; border-radius: 50%; display: block; object-fit: cover; }
+    .nav__links { display: flex; gap: 44px; }
+    .nav__links a { font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); transition: color 0.25s ease; position: relative; padding-bottom: 3px; }
+    .nav__links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--gold); transition: right 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .nav__links a:hover { color: var(--forest); }
+    .nav__links a:hover::after { right: 0; }
+    .nav__links a.active { color: var(--forest); }
+    .nav__links a.active::after { right: 0; background: var(--forest); }
+    .nav__brand-wrap { display: flex; align-items: center; gap: 12px; }
+    .nav__brand-name { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.14em; color: var(--forest); text-transform: uppercase; line-height: 1.05; }
+    .nav__brand-name span { display: block; font-family: 'Jost', sans-serif; font-weight: 400; font-size: 8.5px; letter-spacing: 0.32em; color: var(--gold); text-transform: uppercase; margin-top: 2px; }
+    .nav__right { display: flex; align-items: center; gap: 20px; }
+    .cart-link { position: relative; display: flex; align-items: center; justify-content: center; padding: 6px; transition: opacity 0.2s ease; color: var(--forest); }
+    .cart-link:hover { opacity: 0.5; }
+    .cart-link svg { width: 21px; height: 21px; }
+    .cart-badge {
+      position: absolute; top: -2px; right: -4px; background: var(--gold); color: var(--forest-deep);
+      font-size: 8px; font-weight: 700; width: 15px; height: 15px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transform: scale(0); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cart-badge.visible { transform: scale(1); }
+
+    /* PAGE HEADER */
+    .page-header { padding-top: 76px; background: var(--paper); }
+    .page-header__inner { padding: 72px 48px 56px; border-bottom: 1px solid rgba(10,77,52,0.14); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; }
+    .page-header__kicker { font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(42,42,40,0.4); display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .page-header__kicker::before { content: ''; width: 28px; height: 1px; background: rgba(10,77,52,0.25); }
+    .page-header__title { font-family: 'Times New Roman', Times, serif; font-size: clamp(52px, 8vw, 108px); font-weight: 700; letter-spacing: -0.02em; line-height: 0.9; color: var(--forest); }
+    .page-header__title em { font-weight: 300; font-style: italic; color: var(--gold); }
+    .page-header__right { padding-bottom: 8px; }
+    .page-header__desc { font-size: 12.5px; color: rgba(42,42,40,0.58); line-height: 1.85; max-width: 340px; margin-bottom: 32px; }
+    .page-header__channels { display: flex; flex-direction: column; gap: 10px; }
+    .channel-row { display: flex; align-items: center; gap: 16px; font-size: 11px; color: rgba(42,42,40,0.68); }
+    .channel-row__icon { width: 32px; height: 32px; border: 1px solid rgba(10,77,52,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--forest); }
+    .channel-row__icon svg { width: 14px; height: 14px; }
+    .channel-row__text a { transition: color 0.2s ease; }
+    .channel-row__text a:hover { color: var(--forest); }
+
+    /* MAIN CONTENT */
+    .contact-main { display: grid; grid-template-columns: 1fr 1fr; min-height: 68vh; }
+    .contact-form-wrap { padding: 72px 56px 72px 48px; border-right: 1px solid rgba(10,77,52,0.12); }
+    .section-eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(42,42,40,0.4); margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+    .section-eyebrow::before { content: ''; width: 24px; height: 1px; background: rgba(10,77,52,0.22); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+    .form-field { margin-bottom: 28px; }
+    .form-field.full { grid-column: span 2; }
+    .form-label { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.42); margin-bottom: 10px; font-weight: 500; }
+    .form-input, .form-textarea, .form-select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.2); padding: 10px 0; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300; color: var(--charcoal); outline: none; transition: border-color 0.25s ease; border-radius: 0; appearance: none; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-bottom-color: var(--forest); }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(42,42,40,0.28); font-size: 12px; }
+    .form-textarea { resize: none; height: 120px; }
+    .form-select-wrap { position: relative; }
+    .form-select-wrap::after { content: '↓'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 12px; color: rgba(42,42,40,0.35); pointer-events: none; }
+    .form-select option { background: var(--paper); }
+    .form-submit { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 18px; font-family: 'Jost', sans-serif; font-size: 10.5px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.25s ease, opacity 0.25s ease; }
+    .form-submit::after { content: '→'; font-size: 14px; font-weight: 300; }
+    .form-submit:hover { background: var(--forest-deep); }
+    .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .success-state { display: none; text-align: center; padding: 80px 0; }
+    .success-check { width: 56px; height: 56px; border: 1px solid rgba(10,77,52,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 22px; color: var(--forest); }
+    .success-heading { font-family: 'Times New Roman', Times, serif; font-size: 34px; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.01em; color: var(--forest); }
+    .success-body { font-size: 12px; color: rgba(42,42,40,0.55); line-height: 1.85; margin-bottom: 36px; }
+    .success-reset-btn { font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.5); background: none; border: 1px solid rgba(10,77,52,0.2); padding: 12px 28px; cursor: pointer; font-family: 'Jost', sans-serif; transition: border-color 0.2s ease, color 0.2s ease; }
+    .success-reset-btn:hover { border-color: var(--forest); color: var(--forest); }
+
+    /* RIGHT: INFO */
+    .contact-info-wrap { padding: 72px 48px 72px 56px; background: var(--cream); display: flex; flex-direction: column; gap: 60px; }
+    .info-block__title { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(42,42,40,0.42); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(10,77,52,0.14); }
+    .info-block__list { display: flex; flex-direction: column; gap: 12px; }
+    .info-item { display: flex; flex-direction: column; gap: 2px; }
+    .info-item__label { font-size: 8.5px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(42,42,40,0.4); }
+    .info-item__value { font-size: 12.5px; color: rgba(42,42,40,0.8); transition: color 0.2s ease; }
+    a.info-item__value:hover { color: var(--forest); }
+    .social-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .social-tag { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(42,42,40,0.6); border: 1px solid rgba(10,77,52,0.18); padding: 7px 14px; transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease; }
+    .social-tag:hover { border-color: var(--forest); color: var(--forest); background: rgba(10,77,52,0.05); }
+    .faq-item { padding: 14px 0; border-bottom: 1px solid rgba(10,77,52,0.1); }
+    .faq-item:first-child { border-top: 1px solid rgba(10,77,52,0.1); }
+    .faq-q { font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: 700; color: var(--forest); margin-bottom: 4px; }
+    .faq-a { font-size: 11.5px; color: rgba(42,42,40,0.55); line-height: 1.7; }
+
+    /* TICKER */
+    .ticker { background-color: var(--forest-deep); overflow: hidden; padding: 13px 0; border-top: 1px solid rgba(240,234,214,0.08); }
+    .ticker__inner { display: flex; animation: ticker-scroll 34s linear infinite; white-space: nowrap; }
+    .ticker__item { font-size: 10px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(240,234,214,0.6); padding: 0 32px; flex-shrink: 0; display: inline-flex; align-items: center; gap: 16px; }
+    .ticker__dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; display: inline-block; }
+    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* FOOTER */
+    .footer { background-color: var(--forest-deep); color: var(--cream); padding: 56px 48px 44px; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 48px; border-top: 1px solid rgba(240,234,214,0.08); }
+    .footer__brand { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .footer__brand img { height: 46px; width: 46px; border-radius: 50%; }
+    .footer__brand-name { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer__tagline { font-size: 11px; letter-spacing: 0.12em; color: var(--gold-soft); max-width: 260px; }
+    .footer__col-title { font-size: 9px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.4); margin-bottom: 22px; }
+    .footer__link { font-size: 12px; font-weight: 300; letter-spacing: 0.05em; color: rgba(240,234,214,0.78); line-height: 1.7; transition: color 0.2s ease; display: block; }
+    .footer__link:hover { color: var(--gold-soft); }
+    .footer__links { display: flex; flex-direction: column; gap: 8px; }
+
+    .fade-up.will-animate { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .fade-up.visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+    /* HAMBURGER / MOBILE NAV */
+    .nav__hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; z-index: 1100; }
+    .nav__hamburger span { display: block; width: 22px; height: 1.5px; background: var(--forest); transition: transform 0.3s ease, opacity 0.3s ease; transform-origin: center; }
+    .nav__hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav__hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; inset: 0; background: var(--forest); z-index: 1050; flex-direction: column; justify-content: center; align-items: center; }
+    .mobile-menu.open { display: flex; }
+    body.menu-open { overflow: hidden; }
+    .mobile-menu__links { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .mobile-menu__links a { font-family: 'Times New Roman', Times, serif; font-size: clamp(32px, 9vw, 52px); font-weight: 300; letter-spacing: 0.08em; color: var(--cream); text-transform: uppercase; text-decoration: none; transition: opacity 0.2s ease; line-height: 1.4; }
+    .mobile-menu__links a:hover { opacity: 0.6; }
+    .mobile-menu__footer { position: absolute; bottom: 32px; font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.25em; color: rgba(240,234,214,0.35); text-transform: uppercase; }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 20px; }
+      .nav__links { display: none !important; }
+      .nav__hamburger { display: flex; }
+      .page-header__inner { grid-template-columns: 1fr; padding: 48px 20px 40px; gap: 32px; }
+      .contact-main { grid-template-columns: 1fr; }
+      .contact-form-wrap { padding: 48px 20px; border-right: none; border-bottom: 1px solid rgba(10,77,52,0.12); }
+      .contact-info-wrap { padding: 48px 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: span 1; }
+      .footer { grid-template-columns: 1fr; padding: 40px 20px; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav__brand-wrap">
+      <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company" class="nav__logo">
+      <span class="nav__brand-name">WSC<span>The White Shirt Co.</span></span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="fabrics.html">Fabrics</a>
+      <a href="contact.html" class="active">Contact Us</a>
+    </div>
+    <div class="nav__right">
+      <a href="catalogue.html" class="cart-link" title="View Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="nav-cart-badge">0</span>
+      </a>
+      <button class="nav__hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__links">
+      <a href="index.html" onclick="toggleMobileMenu()">Home</a>
+      <a href="about.html" onclick="toggleMobileMenu()">About</a>
+      <a href="catalogue.html" onclick="toggleMobileMenu()">Catalogue</a>
+      <a href="fabrics.html" onclick="toggleMobileMenu()">Fabrics</a>
+      <a href="contact.html" onclick="toggleMobileMenu()">Contact Us</a>
+    </div>
+    <p class="mobile-menu__footer">The White Shirt Company — A Statement In Every Stitch</p>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header__inner">
+      <div>
+        <div class="page-header__kicker">Reach Out</div>
+        <h1 class="page-header__title">Let's Talk<br><em>Shirts.</em></h1>
+      </div>
+      <div class="page-header__right">
+        <p class="page-header__desc">
+          Whether you have a sizing question, a wholesale enquiry, or you simply want to know more about the two fabrics — we'd like to hear from you. We typically respond within 24 business hours.
+        </p>
+        <div class="page-header__channels">
+          <div class="channel-row">
+            <div class="channel-row__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="channel-row__text">
+              <a href="mailto:Support@thewhiteshirtcompany.in" class="info-item__value">Support@thewhiteshirtcompany.in</a>
+            </div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-row__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.5 5.5l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div class="channel-row__text">
+              <a href="tel:+919034509969" class="info-item__value">+91 90345 09969</a>
+            </div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-row__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.5 5.5l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div class="channel-row__text">
+              <a href="tel:+918168318654" class="info-item__value">+91 81683 18654</a>
+            </div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-row__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <div class="channel-row__text">
+              <a href="https://www.thewhiteshirtcompany.in" target="_blank" rel="noopener" class="info-item__value">www.thewhiteshirtcompany.in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-main">
+
+    <div class="contact-form-wrap">
+      <div class="section-eyebrow">Send a Message</div>
+
+      <div id="form-wrap">
+        <form id="contact-form" class="form-grid" novalidate>
+          <div class="form-field">
+            <label class="form-label">Full Name *</label>
+            <input class="form-input" type="text" name="name" required placeholder="Your full name">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email Address *</label>
+            <input class="form-input" type="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-field full">
+            <label class="form-label">Subject</label>
+            <div class="form-select-wrap">
+              <select class="form-select" name="subject">
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Sizing Help">Sizing Help</option>
+                <option value="Order Status">Order Status</option>
+                <option value="Fabric Question">Fabric Question</option>
+                <option value="Wholesale">Wholesale Partnership</option>
+                <option value="Press">Press &amp; Media</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field full">
+            <label class="form-label">Message *</label>
+            <textarea class="form-textarea" name="message" required placeholder="Tell us what you're looking for..."></textarea>
+          </div>
+          <div class="form-field full" style="margin-top:4px;">
+            <button type="submit" class="form-submit" id="form-submit-btn">Send Message</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="success-state" id="success-state">
+        <div class="success-check">✓</div>
+        <h3 class="success-heading">Message Received</h3>
+        <p class="success-body">Thank you for reaching out to The White Shirt Company.<br>We will contact you soon — our team typically<br>responds within 24 business hours.</p>
+        <button class="success-reset-btn" id="success-reset-btn">Send Another Message</button>
+      </div>
+    </div>
+
+    <div class="contact-info-wrap">
+
+      <div class="info-block fade-up">
+        <div class="info-block__title">Contact</div>
+        <div class="info-block__list">
+          <div class="info-item">
+            <span class="info-item__label">Email</span>
+            <a href="mailto:Support@thewhiteshirtcompany.in" class="info-item__value">Support@thewhiteshirtcompany.in</a>
+          </div>
+          <div class="info-item">
+            <span class="info-item__label">Phone</span>
+            <a href="tel:+919034509969" class="info-item__value">+91 90345 09969</a>
+          </div>
+          <div class="info-item">
+            <span class="info-item__label">Phone (Alt.)</span>
+            <a href="tel:+918168318654" class="info-item__value">+91 81683 18654</a>
+          </div>
+          <div class="info-item">
+            <span class="info-item__label">Website</span>
+            <a href="https://www.thewhiteshirtcompany.in" target="_blank" rel="noopener" class="info-item__value">www.thewhiteshirtcompany.in</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-block fade-up">
+        <div class="info-block__title">Follow WSC</div>
+        <div class="social-row">
+          <a href="https://www.instagram.com/thewhiteshirt_company" target="_blank" rel="noopener" class="social-tag">@thewhiteshirt_company</a>
+        </div>
+      </div>
+
+      <div class="info-block fade-up">
+        <div class="info-block__title">Before You Write</div>
+        <div class="faq-item">
+          <p class="faq-q">Which fabric should I choose?</p>
+          <p class="faq-a">Cotton for structure and crispness, linen for softness and warm-weather ease. Full comparison on our Fabrics page.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Do you offer exchanges?</p>
+          <p class="faq-a">Yes — reach out with your order details and we'll sort a size exchange within 14 days of delivery.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker__inner" id="ticker-inner"></div>
+  </div>
+
+  <footer class="footer">
+    <div>
+      <div class="footer__brand">
+        <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company">
+        <span class="footer__brand-name">The White Shirt Co.</span>
+      </div>
+      <p class="footer__tagline">A statement in every stitch. One silhouette, two fabrics, no compromises.</p>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigate</p>
+      <div class="footer__links">
+        <a href="about.html" class="footer__link">About</a>
+        <a href="catalogue.html" class="footer__link">Catalogue</a>
+        <a href="fabrics.html" class="footer__link">Fabrics</a>
+        <a href="contact.html" class="footer__link">Contact Us</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <div class="footer__links">
+        <a href="mailto:Support@thewhiteshirtcompany.in" class="footer__link">Support@thewhiteshirtcompany.in</a>
+        <a href="tel:+919034509969" class="footer__link">+91 90345 09969</a>
+        <a href="tel:+918168318654" class="footer__link">+91 81683 18654</a>
+        <a href="https://www.thewhiteshirtcompany.in" target="_blank" rel="noopener" class="footer__link">www.thewhiteshirtcompany.in</a>
+        <a href="https://www.instagram.com/thewhiteshirt_company" target="_blank" rel="noopener" class="footer__link">@thewhiteshirt_company</a>
+      </div>
+    </div>
+    <div style="grid-column:1/-1;border-top:1px solid rgba(240,234,214,0.08);padding-top:20px;display:flex;justify-content:flex-end;">
+      <a href="admin.html" style="font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,234,214,0.2);transition:color 0.25s ease;" onmouseover="this.style.color='rgba(240,234,214,0.55)'" onmouseout="this.style.color='rgba(240,234,214,0.2)'">Admin</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('navHamburger').classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    }
+
+    const tickerItems = ['Contact Us', 'Cotton · Linen', 'A Statement In Every Stitch', 'Support@thewhiteshirtcompany.in', '+91 90345 09969', '@thewhiteshirt_company', 'www.thewhiteshirtcompany.in', 'Two Fabrics. One Standard.', 'Wholesale Enquiries Welcome'];
+    document.getElementById('ticker-inner').innerHTML = [...tickerItems, ...tickerItems].map(t => `<span class="ticker__item">${t}<span class="ticker__dot"></span></span>`).join('');
+
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = document.getElementById('form-submit-btn');
+
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(input => {
+        if (!input.value.trim()) {
+          input.style.borderBottomColor = '#a13a3a';
+          valid = false;
+          input.addEventListener('input', () => { input.style.borderBottomColor = ''; }, { once: true });
+        }
+      });
+      if (!valid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      setTimeout(() => {
+        showSuccess();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      }, 700);
+    });
+
+    function showSuccess() {
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success-state').style.display = 'block';
+    }
+
+    document.getElementById('success-reset-btn').addEventListener('click', () => {
+      document.getElementById('contact-form').reset();
+      document.getElementById('form-wrap').style.display = 'block';
+      document.getElementById('success-state').style.display = 'none';
+    });
+
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('will-animate'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    (function () {
+      const badge = document.getElementById('nav-cart-badge');
+      const count = wscCartCount();
+      badge.textContent = count;
+      badge.classList.toggle('visible', count > 0);
+    })();
+  </script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

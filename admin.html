@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — The White Shirt Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="store.js"></script>
+  <style>
+    :root {
+      --forest: #0A4D34;
+      --forest-deep: #073826;
+      --cream: #F0EAD6;
+      --paper: #FAF8F1;
+      --charcoal: #2A2A28;
+      --gold: #C9B037;
+      --gold-soft: #E4D9A8;
+      --red: #a13a3a;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; background-color: var(--paper); color: var(--charcoal); line-height: 1.6; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--gold); outline-offset: 2px;
+    }
+
+    /* ── LOGIN GATE ────────────────────────────────────── */
+    .gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--forest); padding: 20px; }
+    .gate__panel { background: var(--paper); width: 380px; max-width: 100%; padding: 44px 36px; text-align: center; }
+    .gate__logo { height: 52px; width: 52px; border-radius: 50%; margin: 0 auto 20px; display: block; }
+    .gate__title { font-family: 'Times New Roman', Times, serif; font-size: 26px; font-weight: 700; color: var(--forest); margin-bottom: 6px; }
+    .gate__sub { font-size: 11.5px; color: rgba(42,42,40,0.55); margin-bottom: 28px; }
+    .gate__field { text-align: left; margin-bottom: 20px; }
+    .gate__label { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.45); margin-bottom: 8px; font-weight: 500; }
+    .gate__input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.25); padding: 10px 0; font-family: 'Jost', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color 0.2s ease; }
+    .gate__input:focus { border-bottom-color: var(--forest); }
+    .gate__btn { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 15px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; transition: background 0.2s ease; }
+    .gate__btn:hover { background: var(--forest-deep); }
+    .gate__error { font-size: 11px; color: var(--red); margin-top: 14px; display: none; }
+    .gate__hint { font-size: 10px; color: rgba(42,42,40,0.35); margin-top: 24px; line-height: 1.7; }
+
+    /* ── DASHBOARD SHELL ───────────────────────────────── */
+    .dash { display: none; }
+    .dash.active { display: block; }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: var(--forest); color: var(--cream); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 68px; }
+    .topbar__brand { display: flex; align-items: center; gap: 12px; }
+    .topbar__brand img { height: 36px; width: 36px; border-radius: 50%; }
+    .topbar__brand-text { font-family: 'Times New Roman', Times, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .topbar__brand-text span { display: block; font-family: 'Jost', sans-serif; font-weight: 400; font-size: 8px; letter-spacing: 0.24em; color: var(--gold-soft); text-transform: uppercase; margin-top: 1px; }
+    .topbar__right { display: flex; align-items: center; gap: 20px; }
+    .topbar__link { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,234,214,0.75); transition: color 0.2s ease; }
+    .topbar__link:hover { color: var(--cream); }
+    .topbar__logout { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,234,214,0.55); border: 1px solid rgba(240,234,214,0.25); padding: 8px 16px; transition: all 0.2s ease; }
+    .topbar__logout:hover { border-color: var(--cream); color: var(--cream); }
+
+    .notice { background: var(--gold-soft); color: var(--forest-deep); font-size: 11.5px; padding: 12px 32px; text-align: center; letter-spacing: 0.02em; }
+
+    .tabs { display: flex; gap: 4px; padding: 0 32px; background: var(--paper); border-bottom: 1px solid rgba(10,77,52,0.14); }
+    .tab-btn { padding: 18px 22px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(42,42,40,0.45); background: none; border: none; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+    .tab-btn:hover { color: var(--forest); }
+    .tab-btn.active { color: var(--forest); border-bottom-color: var(--forest); }
+
+    .panel { display: none; padding: 40px 32px 80px; max-width: 1280px; margin: 0 auto; }
+    .panel.active { display: block; }
+
+    /* ── STATS ─────────────────────────────────────────── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 44px; }
+    .stat-tile { background: var(--forest); color: var(--cream); padding: 26px 24px; }
+    .stat-tile__label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 14px; display: block; }
+    .stat-tile__val { font-family: 'Times New Roman', Times, serif; font-size: 30px; font-weight: 700; }
+    .stat-tile__sub { font-size: 10.5px; color: rgba(240,234,214,0.55); margin-top: 6px; }
+
+    .section-title { font-family: 'Times New Roman', Times, serif; font-size: 20px; font-weight: 700; color: var(--forest); margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
+    .section-title .danger-btn { font-family: 'Jost', sans-serif; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); background: none; border: 1px solid rgba(161,58,58,0.35); padding: 8px 14px; font-weight: 500; transition: all 0.2s ease; }
+    .section-title .danger-btn:hover { background: rgba(161,58,58,0.08); border-color: var(--red); }
+    .section-title .add-product-btn { font-family: 'Jost', sans-serif; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cream); background: var(--forest); border: none; padding: 10px 18px; font-weight: 500; transition: background 0.2s ease; }
+    .section-title .add-product-btn:hover { background: var(--forest-deep); }
+    .add-product-card { background: var(--paper); border: 1px solid var(--gold); margin-bottom: 28px; }
+    .add-product-card .product-edit-card__head { background: var(--gold-soft); }
+
+    .chart-wrap { background: var(--paper); border: 1px solid rgba(10,77,52,0.12); padding: 28px; margin-bottom: 44px; }
+    .chart-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .chart-row:last-child { margin-bottom: 0; }
+    .chart-row__label { font-size: 12px; font-weight: 500; color: var(--charcoal); }
+    .chart-row__track { background: var(--cream); height: 20px; position: relative; overflow: hidden; }
+    .chart-row__fill { height: 100%; background: linear-gradient(90deg, var(--forest), var(--forest-deep)); transition: width 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .chart-row__val { font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: 700; color: var(--forest); white-space: nowrap; }
+
+    .table-wrap { background: var(--paper); border: 1px solid rgba(10,77,52,0.12); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    thead th { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-soft); font-weight: 500; padding: 14px 20px; text-align: left; background: var(--forest); }
+    tbody tr { border-bottom: 1px solid rgba(10,77,52,0.08); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(10,77,52,0.03); }
+    tbody td { padding: 14px 20px; font-size: 12px; color: rgba(42,42,40,0.75); vertical-align: top; }
+    tbody td.mono { font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: var(--forest); }
+
+    .empty-state { text-align: center; padding: 56px 20px; color: rgba(42,42,40,0.45); }
+    .empty-state__title { font-family: 'Times New Roman', Times, serif; font-size: 20px; font-style: italic; color: var(--forest); margin-bottom: 10px; }
+    .empty-state__body { font-size: 12px; max-width: 380px; margin: 0 auto; line-height: 1.8; }
+
+    /* ── PRODUCTS PANEL ────────────────────────────────── */
+    .product-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .product-edit-card { background: var(--paper); border: 1px solid rgba(10,77,52,0.14); }
+    .product-edit-card__head { display: flex; gap: 16px; padding: 22px; border-bottom: 1px solid rgba(10,77,52,0.12); align-items: center; }
+    .delete-product-btn { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); background: none; border: 1px solid rgba(161,58,58,0.3); padding: 8px 14px; flex-shrink: 0; transition: all 0.2s ease; }
+    .delete-product-btn:hover { background: rgba(161,58,58,0.08); border-color: var(--red); }
+    .product-edit-card__thumb { width: 64px; height: 80px; object-fit: cover; object-position: top; background: var(--cream); flex-shrink: 0; }
+    .product-edit-card__title { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: var(--forest); }
+    .product-edit-card__status { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+    .product-edit-card__status.in { color: var(--forest); }
+    .product-edit-card__status.out { color: var(--red); }
+    .product-edit-card__body { padding: 22px; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+    .field { margin-bottom: 18px; }
+    .field__label { display: block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(42,42,40,0.45); margin-bottom: 8px; font-weight: 500; }
+    .field__input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.22); padding: 9px 0; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--charcoal); outline: none; transition: border-color 0.2s ease; }
+    .field__input:focus { border-bottom-color: var(--forest); }
+    .field__hint { font-size: 10.5px; color: var(--gold); margin-top: 6px; }
+
+    .stock-toggle { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+    .switch { position: relative; width: 42px; height: 22px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .switch__track { position: absolute; inset: 0; background: rgba(42,42,40,0.2); cursor: pointer; transition: background 0.2s ease; }
+    .switch__thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: var(--paper); transition: transform 0.2s ease; }
+    .switch input:checked + .switch__track { background: var(--forest); }
+    .switch input:checked + .switch__track .switch__thumb { transform: translateX(20px); }
+    .stock-toggle__label { font-size: 12px; font-weight: 500; }
+
+    .gallery-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .gallery-item { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid rgba(10,77,52,0.1); }
+    .gallery-item img { width: 40px; height: 50px; object-fit: cover; object-position: top; flex-shrink: 0; }
+    .gallery-item__path { font-size: 10px; color: rgba(42,42,40,0.5); flex: 1; word-break: break-all; }
+    .gallery-item__actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .gallery-item__btn { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 9px; border: 1px solid rgba(10,77,52,0.18); background: none; color: rgba(42,42,40,0.6); transition: all 0.2s ease; }
+    .gallery-item__btn:hover { border-color: var(--forest); color: var(--forest); }
+    .gallery-item__btn.is-main { background: var(--forest); color: var(--cream); border-color: var(--forest); }
+    .gallery-item__btn.remove:hover { border-color: var(--red); color: var(--red); }
+
+    .add-image-row { display: flex; gap: 8px; margin-bottom: 22px; }
+    .add-image-row input { flex: 1; }
+    .add-image-row button { flex-shrink: 0; font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; padding: 0 16px; background: var(--cream); border: 1px solid rgba(10,77,52,0.2); color: var(--forest); font-weight: 500; transition: all 0.2s ease; }
+    .add-image-row button:hover { background: var(--gold-soft); border-color: var(--gold-soft); }
+
+    .save-btn { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 14px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; transition: background 0.2s ease; }
+    .save-btn:hover { background: var(--forest-deep); }
+
+    .reset-row { margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(10,77,52,0.14); display: flex; justify-content: flex-end; }
+
+    /* ── TOAST ─────────────────────────────────────────── */
+    .toast { position: fixed; bottom: 28px; right: 28px; background: var(--forest); color: var(--cream); padding: 14px 22px; font-size: 12px; letter-spacing: 0.03em; z-index: 900; opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .product-edit-grid { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .topbar__link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── LOGIN GATE ──────────────────────────────────── -->
+  <div class="gate" id="gate">
+    <div class="gate__panel">
+      <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company" class="gate__logo">
+      <h1 class="gate__title">WSC Admin</h1>
+      <p class="gate__sub">Restricted area — for The White Shirt Company staff only.</p>
+      <form id="gate-form">
+        <div class="gate__field">
+          <label class="gate__label">Access Code</label>
+          <input class="gate__input" type="password" id="gate-password" placeholder="Enter access code" autocomplete="off">
+        </div>
+        <button type="submit" class="gate__btn">Enter Dashboard</button>
+        <p class="gate__error" id="gate-error">Incorrect access code. Try again.</p>
+      </form>
+      <p class="gate__hint">This is a local, browser-only admin prototype — not a secured production login. Do not reuse this password elsewhere.</p>
+    </div>
+  </div>
+
+  <!-- ─── DASHBOARD ───────────────────────────────────── -->
+  <div class="dash" id="dash">
+    <div class="topbar">
+      <div class="topbar__brand">
+        <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company">
+        <span class="topbar__brand-text">WSC Admin<span>The White Shirt Co.</span></span>
+      </div>
+      <div class="topbar__right">
+        <a href="catalogue.html" class="topbar__link">View Storefront →</a>
+        <button class="topbar__logout" id="logout-btn">Log Out</button>
+      </div>
+    </div>
+
+    <div class="notice">This dashboard reads and writes data stored only in this browser (localStorage) — it is not a shared, multi-user backend.</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-panel="overview">Overview &amp; Sales</button>
+      <button class="tab-btn" data-panel="products">Products</button>
+    </div>
+
+    <!-- OVERVIEW / STATS -->
+    <div class="panel active" id="panel-overview">
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <span class="stat-tile__label">Total Revenue</span>
+          <div class="stat-tile__val" id="stat-revenue">₹0</div>
+          <div class="stat-tile__sub" id="stat-revenue-usd"></div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile__label">Total Orders</span>
+          <div class="stat-tile__val" id="stat-orders">0</div>
+          <div class="stat-tile__sub">All time</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile__label">Units Sold</span>
+          <div class="stat-tile__val" id="stat-units">0</div>
+          <div class="stat-tile__sub">Shirts shipped</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile__label">Avg. Order Value</span>
+          <div class="stat-tile__val" id="stat-aov">₹0</div>
+          <div class="stat-tile__sub">Per order</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Revenue by Product</h2>
+      <div class="chart-wrap" id="chart-wrap"></div>
+
+      <h2 class="section-title">
+        Recent Orders
+        <button class="danger-btn" id="clear-orders-btn">Clear Order History</button>
+      </h2>
+      <div class="table-wrap" id="orders-table-wrap"></div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="panel" id="panel-products">
+      <h2 class="section-title">
+        Manage Products
+        <button class="add-product-btn" id="toggle-add-product-btn">+ Add New Product</button>
+      </h2>
+
+      <div class="add-product-card" id="add-product-card" style="display:none;">
+        <div class="product-edit-card__head">
+          <div class="product-edit-card__title">New Product</div>
+        </div>
+        <div class="product-edit-card__body">
+          <div class="field">
+            <label class="field__label">Product Name *</label>
+            <input class="field__input" type="text" id="new-name" placeholder="e.g. Oxford White Shirt">
+          </div>
+          <div class="field">
+            <label class="field__label">Description</label>
+            <input class="field__input" type="text" id="new-desc" placeholder="Short description shown on the catalogue">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label">Price (INR) *</label>
+              <input class="field__input" type="number" min="0" step="1" id="new-price-inr" placeholder="2500">
+            </div>
+            <div class="field">
+              <label class="field__label">Price (USD) *</label>
+              <input class="field__input" type="number" min="0" step="1" id="new-price-usd" placeholder="30">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label">Main Image (path or URL) *</label>
+            <input class="field__input" type="text" id="new-image" placeholder="website_images/example.jpg">
+            <p class="field__hint">No file upload in this local demo — paste an existing image path or an external image URL. More images can be added after creating the product.</p>
+          </div>
+          <div class="field">
+            <label class="field__label">Availability</label>
+            <div class="stock-toggle">
+              <label class="switch">
+                <input type="checkbox" id="new-instock" checked>
+                <span class="switch__track"><span class="switch__thumb"></span></span>
+              </label>
+              <span class="stock-toggle__label" id="new-instock-label">In Stock</span>
+            </div>
+          </div>
+          <button type="button" class="save-btn" id="create-product-btn">Create Product</button>
+        </div>
+      </div>
+
+      <div class="product-edit-grid" id="product-edit-grid"></div>
+      <div class="reset-row">
+        <button class="danger-btn" id="reset-products-btn">Reset All Products to Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const ADMIN_PASSWORD = 'wsc2026';
+    const SESSION_KEY = 'wsc_admin_session';
+
+    const gateEl = document.getElementById('gate');
+    const dashEl = document.getElementById('dash');
+
+    function enterDashboard() {
+      gateEl.style.display = 'none';
+      dashEl.classList.add('active');
+      renderOverview();
+      renderProducts();
+    }
+
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      enterDashboard();
+    }
+
+    document.getElementById('gate-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = document.getElementById('gate-password');
+      const errorEl = document.getElementById('gate-error');
+      if (input.value === ADMIN_PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        errorEl.style.display = 'none';
+        enterDashboard();
+      } else {
+        errorEl.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem(SESSION_KEY);
+      location.reload();
+    });
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+      });
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('visible'), 2400);
+    }
+
+    // ── OVERVIEW / STATS ──────────────────────────────────
+    function renderOverview() {
+      const orders = wscLoadOrders();
+      const products = wscLoadProducts();
+
+      const totalRevenue = orders.reduce((s, o) => s + o.totalInr, 0);
+      const totalOrders = orders.length;
+      const totalUnits = orders.reduce((s, o) => s + o.items.reduce((s2, i) => s2 + i.qty, 0), 0);
+      const aov = totalOrders ? Math.round(totalRevenue / totalOrders) : 0;
+
+      document.getElementById('stat-revenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+      document.getElementById('stat-revenue-usd').textContent = totalOrders ? 'Across ' + totalOrders + ' order' + (totalOrders === 1 ? '' : 's') : 'No sales yet';
+      document.getElementById('stat-orders').textContent = totalOrders;
+      document.getElementById('stat-units').textContent = totalUnits;
+      document.getElementById('stat-aov').textContent = '₹' + aov.toLocaleString('en-IN');
+
+      // Revenue by product
+      const revenueByProduct = {};
+      products.forEach(p => { revenueByProduct[p.id] = 0; });
+      orders.forEach(o => o.items.forEach(i => { revenueByProduct[i.id] = (revenueByProduct[i.id] || 0) + i.priceInr * i.qty; }));
+      const maxRev = Math.max(1, ...Object.values(revenueByProduct));
+
+      const chartWrap = document.getElementById('chart-wrap');
+      if (totalOrders === 0) {
+        chartWrap.innerHTML = `<div class="empty-state">
+          <p class="empty-state__title">No sales data yet</p>
+          <p class="empty-state__body">Place a test order from the Catalogue page (add a shirt to cart → checkout) to see revenue and order stats appear here.</p>
+        </div>`;
+      } else {
+        chartWrap.innerHTML = products.map(p => {
+          const rev = revenueByProduct[p.id] || 0;
+          const pct = Math.round((rev / maxRev) * 100);
+          return `
+            <div class="chart-row">
+              <span class="chart-row__label">${p.name}</span>
+              <div class="chart-row__track"><div class="chart-row__fill" style="width:${pct}%"></div></div>
+              <span class="chart-row__val">₹${rev.toLocaleString('en-IN')}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Recent orders table
+      const tableWrap = document.getElementById('orders-table-wrap');
+      if (totalOrders === 0) {
+        tableWrap.innerHTML = `<div class="empty-state">
+          <p class="empty-state__title">No orders placed yet</p>
+          <p class="empty-state__body">Completed orders from the Catalogue checkout will appear here with customer and item details.</p>
+        </div>`;
+      } else {
+        const rows = orders.slice(0, 20).map(o => `
+          <tr>
+            <td class="mono">${o.id}</td>
+            <td>${new Date(o.date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+            <td>${o.customer.name}<br><span style="color:rgba(42,42,40,0.45);font-size:10.5px;">${o.customer.email}</span></td>
+            <td>${o.items.map(i => `${i.qty}× ${i.name} (${i.size})`).join('<br>')}</td>
+            <td class="mono">₹${o.totalInr.toLocaleString('en-IN')}</td>
+          </tr>
+        `).join('');
+        tableWrap.innerHTML = `
+          <table>
+            <thead><tr><th>Order ID</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+    }
+
+    document.getElementById('clear-orders-btn').addEventListener('click', () => {
+      if (!confirm('Clear all order history? This cannot be undone.')) return;
+      wscClearOrders();
+      renderOverview();
+      showToast('Order history cleared');
+    });
+
+    // ── PRODUCTS ──────────────────────────────────────────
+    function renderProducts() {
+      const products = wscLoadProducts();
+      const grid = document.getElementById('product-edit-grid');
+      grid.innerHTML = products.map(p => productCardHtml(p)).join('');
+    }
+
+    function productCardHtml(p) {
+      const galleryHtml = p.gallery.map((src, i) => `
+        <div class="gallery-item">
+          <img src="${src}" alt="">
+          <span class="gallery-item__path">${src}</span>
+          <div class="gallery-item__actions">
+            <button type="button" class="gallery-item__btn${i === 0 ? ' is-main' : ''}" data-set-main="${p.id}" data-idx="${i}">${i === 0 ? 'Main' : 'Set Main'}</button>
+            <button type="button" class="gallery-item__btn remove" data-remove-img="${p.id}" data-idx="${i}" ${p.gallery.length <= 1 ? 'disabled' : ''}>Remove</button>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="product-edit-card" data-card="${p.id}">
+          <div class="product-edit-card__head">
+            <img class="product-edit-card__thumb" src="${p.gallery[0]}" alt="${p.name}">
+            <div style="flex:1;">
+              <div class="product-edit-card__title">${p.name}</div>
+              <div class="product-edit-card__status ${p.inStock === false ? 'out' : 'in'}">${p.inStock === false ? 'Out of Stock' : 'In Stock'}</div>
+            </div>
+            <button type="button" class="delete-product-btn" data-delete="${p.id}" title="Delete product">Delete</button>
+          </div>
+          <div class="product-edit-card__body">
+            <div class="field">
+              <label class="field__label">Product Name</label>
+              <input class="field__input" type="text" data-field="name" data-id="${p.id}" value="${p.name}">
+            </div>
+            <div class="field">
+              <label class="field__label">Description</label>
+              <input class="field__input" type="text" data-field="desc" data-id="${p.id}" value="${p.desc}">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label">Price (INR)</label>
+                <input class="field__input" type="number" min="0" step="1" data-field="priceInr" data-id="${p.id}" value="${p.priceInr}">
+              </div>
+              <div class="field">
+                <label class="field__label">Price (USD)</label>
+                <input class="field__input" type="number" min="0" step="1" data-field="priceUsd" data-id="${p.id}" value="${p.priceUsd}">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label">Discount (%)</label>
+              <input class="field__input" type="number" min="0" max="90" step="1" data-field="discountPct" data-id="${p.id}" value="${p.discountPct || 0}">
+              <p class="field__hint" data-discount-hint="${p.id}">${p.discountPct > 0 ? 'Customer pays ₹' + wscDiscountedPrice(p.priceInr, p.discountPct).toLocaleString('en-IN') : 'No discount applied'}</p>
+            </div>
+            <div class="field">
+              <label class="field__label">Availability</label>
+              <div class="stock-toggle">
+                <label class="switch">
+                  <input type="checkbox" data-field="inStock" data-id="${p.id}" ${p.inStock !== false ? 'checked' : ''}>
+                  <span class="switch__track"><span class="switch__thumb"></span></span>
+                </label>
+                <span class="stock-toggle__label">${p.inStock !== false ? 'In Stock' : 'Out of Stock'}</span>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label">Photo Gallery (first = main image)</label>
+              <div class="gallery-list" data-gallery="${p.id}">${galleryHtml}</div>
+              <div class="add-image-row">
+                <input class="field__input" type="text" placeholder="Add image path or URL..." data-add-image-input="${p.id}">
+                <button type="button" data-add-image="${p.id}">Add</button>
+              </div>
+            </div>
+            <button type="button" class="save-btn" data-save="${p.id}">Save Changes</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Live discount preview + stock label as inputs change
+    document.addEventListener('input', e => {
+      const field = e.target.dataset.field;
+      if (!field) return;
+      const id = e.target.dataset.id;
+      const card = document.querySelector(`[data-card="${id}"]`);
+      if (field === 'discountPct' || field === 'priceInr') {
+        const priceInput = card.querySelector(`[data-field="priceInr"]`);
+        const discInput = card.querySelector(`[data-field="discountPct"]`);
+        const hint = card.querySelector(`[data-discount-hint="${id}"]`);
+        const price = Number(priceInput.value) || 0;
+        const disc = Number(discInput.value) || 0;
+        hint.textContent = disc > 0 ? 'Customer pays ₹' + wscDiscountedPrice(price, disc).toLocaleString('en-IN') : 'No discount applied';
+      }
+    });
+
+    document.addEventListener('change', e => {
+      if (e.target.dataset.field === 'inStock') {
+        const id = e.target.dataset.id;
+        const card = document.querySelector(`[data-card="${id}"]`);
+        const label = card.querySelector('.stock-toggle__label');
+        const statusEl = card.querySelector('.product-edit-card__status');
+        const checked = e.target.checked;
+        label.textContent = checked ? 'In Stock' : 'Out of Stock';
+        statusEl.textContent = checked ? 'In Stock' : 'Out of Stock';
+        statusEl.className = 'product-edit-card__status ' + (checked ? 'in' : 'out');
+      }
+    });
+
+    // Gallery: set main image
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-set-main]');
+      if (!btn) return;
+      const products = wscLoadProducts();
+      const p = products.find(x => x.id === btn.dataset.setMain);
+      const idx = Number(btn.dataset.idx);
+      if (idx === 0) return;
+      const [moved] = p.gallery.splice(idx, 1);
+      p.gallery.unshift(moved);
+      wscSaveProducts(products);
+      renderProducts();
+      showToast('Main image updated for ' + p.name);
+    });
+
+    // Gallery: remove image
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-remove-img]');
+      if (!btn) return;
+      const products = wscLoadProducts();
+      const p = products.find(x => x.id === btn.dataset.removeImg);
+      if (p.gallery.length <= 1) return;
+      p.gallery.splice(Number(btn.dataset.idx), 1);
+      wscSaveProducts(products);
+      renderProducts();
+      showToast('Image removed from ' + p.name);
+    });
+
+    // Gallery: add image by URL/path
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-add-image]');
+      if (!btn) return;
+      const id = btn.dataset.addImage;
+      const input = document.querySelector(`[data-add-image-input="${id}"]`);
+      const val = input.value.trim();
+      if (!val) return;
+      const products = wscLoadProducts();
+      const p = products.find(x => x.id === id);
+      p.gallery.push(val);
+      wscSaveProducts(products);
+      renderProducts();
+      showToast('Image added to ' + p.name);
+    });
+
+    // Save product changes
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-save]');
+      if (!btn) return;
+      const id = btn.dataset.save;
+      const card = document.querySelector(`[data-card="${id}"]`);
+      const products = wscLoadProducts();
+      const p = products.find(x => x.id === id);
+
+      p.name = card.querySelector('[data-field="name"]').value.trim() || p.name;
+      p.desc = card.querySelector('[data-field="desc"]').value.trim();
+      p.priceInr = Number(card.querySelector('[data-field="priceInr"]').value) || 0;
+      p.priceUsd = Number(card.querySelector('[data-field="priceUsd"]').value) || 0;
+      p.discountPct = Math.min(90, Math.max(0, Number(card.querySelector('[data-field="discountPct"]').value) || 0));
+      p.inStock = card.querySelector('[data-field="inStock"]').checked;
+
+      wscSaveProducts(products);
+      renderProducts();
+      showToast(p.name + ' saved — live on the storefront');
+    });
+
+    document.getElementById('reset-products-btn').addEventListener('click', () => {
+      if (!confirm('Reset all products to their default prices, photos, and stock status? Any products you added will be removed too. This cannot be undone.')) return;
+      wscResetProducts();
+      renderProducts();
+      showToast('Products reset to defaults');
+    });
+
+    // Delete product
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-delete]');
+      if (!btn) return;
+      const products = wscLoadProducts();
+      const p = products.find(x => x.id === btn.dataset.delete);
+      if (!p) return;
+      if (!confirm(`Delete "${p.name}"? This removes it from the catalogue immediately. This cannot be undone.`)) return;
+      wscSaveProducts(products.filter(x => x.id !== p.id));
+      renderProducts();
+      showToast(p.name + ' deleted');
+    });
+
+    // Add New Product — toggle form
+    const addProductCard = document.getElementById('add-product-card');
+    document.getElementById('toggle-add-product-btn').addEventListener('click', () => {
+      const willShow = addProductCard.style.display === 'none';
+      addProductCard.style.display = willShow ? 'block' : 'none';
+      if (willShow) document.getElementById('new-name').focus();
+    });
+
+    document.getElementById('new-instock').addEventListener('change', e => {
+      document.getElementById('new-instock-label').textContent = e.target.checked ? 'In Stock' : 'Out of Stock';
+    });
+
+    document.getElementById('create-product-btn').addEventListener('click', () => {
+      const name = document.getElementById('new-name').value.trim();
+      const desc = document.getElementById('new-desc').value.trim();
+      const priceInr = Number(document.getElementById('new-price-inr').value) || 0;
+      const priceUsd = Number(document.getElementById('new-price-usd').value) || 0;
+      const image = document.getElementById('new-image').value.trim();
+      const inStock = document.getElementById('new-instock').checked;
+
+      if (!name || !priceInr || !priceUsd || !image) {
+        showToast('Fill in name, both prices, and an image to create a product');
+        return;
+      }
+
+      const products = wscLoadProducts();
+      const newProduct = {
+        id: wscUniqueProductId(name, products),
+        name,
+        desc: desc || 'A White Shirt Company original.',
+        gallery: [image],
+        priceInr,
+        priceUsd,
+        discountPct: 0,
+        inStock,
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+      };
+      products.push(newProduct);
+      wscSaveProducts(products);
+      renderProducts();
+
+      // Reset the form and collapse it
+      document.getElementById('new-name').value = '';
+      document.getElementById('new-desc').value = '';
+      document.getElementById('new-price-inr').value = '';
+      document.getElementById('new-price-usd').value = '';
+      document.getElementById('new-image').value = '';
+      document.getElementById('new-instock').checked = true;
+      document.getElementById('new-instock-label').textContent = 'In Stock';
+      addProductCard.style.display = 'none';
+
+      showToast(name + ' added — live on the storefront');
+    });
+  </script>
+</body>
+</html>

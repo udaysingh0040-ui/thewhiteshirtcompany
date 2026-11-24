@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabrics — The White Shirt Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="store.js"></script>
+  <style>
+    :root {
+      --forest: #0A4D34;
+      --forest-deep: #073826;
+      --cream: #F0EAD6;
+      --paper: #FAF8F1;
+      --charcoal: #2A2A28;
+      --gold: #C9B037;
+      --gold-soft: #E4D9A8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; background-color: var(--paper); color: var(--charcoal); overflow-x: hidden; line-height: 1.7; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--gold); outline-offset: 2px;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: 0.4;
+    }
+
+    /* NAV */
+    .nav { position: fixed; inset: 0 0 auto 0; z-index: 500; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 76px; background-color: var(--paper); border-bottom: 1px solid rgba(10,77,52,0.14); }
+    .nav__logo { height: 42px; width: 42px; border-radius: 50%; display: block; object-fit: cover; }
+    .nav__links { display: flex; gap: 44px; }
+    .nav__links a { font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--charcoal); transition: color 0.25s ease; position: relative; padding-bottom: 3px; }
+    .nav__links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--gold); transition: right 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .nav__links a:hover { color: var(--forest); }
+    .nav__links a:hover::after { right: 0; }
+    .nav__links a.active { color: var(--forest); }
+    .nav__links a.active::after { right: 0; background: var(--forest); }
+    .nav__right { display: flex; align-items: center; gap: 22px; }
+    .cart-link { position: relative; display: flex; align-items: center; justify-content: center; padding: 6px; transition: opacity 0.2s ease, transform 0.2s ease; color: var(--forest); }
+    .cart-link:hover { opacity: 0.6; transform: translateY(-1px); }
+    .cart-link svg { width: 21px; height: 21px; }
+    .cart-badge {
+      position: absolute; top: -2px; right: -4px; background: var(--gold); color: var(--forest-deep);
+      font-size: 8px; font-weight: 700; width: 15px; height: 15px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transform: scale(0); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cart-badge.visible { transform: scale(1); }
+    .nav__cta { font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest); display: flex; align-items: center; gap: 8px; transition: opacity 0.25s ease; cursor: pointer; }
+    .nav__cta:hover { opacity: 0.55; }
+    .nav__cta::after { content: '→'; font-weight: 300; font-size: 13px; }
+    .nav__brand-wrap { display: flex; align-items: center; gap: 12px; }
+    .nav__brand-name { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.14em; color: var(--forest); text-transform: uppercase; line-height: 1.05; }
+    .nav__brand-name span { display: block; font-family: 'Jost', sans-serif; font-weight: 400; font-size: 8.5px; letter-spacing: 0.32em; color: var(--gold); text-transform: uppercase; margin-top: 2px; }
+
+    .label-sm { font-size: 10.5px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; display: block; }
+    .body-sm { font-size: 12px; line-height: 1.85; font-weight: 300; }
+
+    /* ── HERO ──────────────────────────────────────────── */
+    .hero { padding-top: 76px; background-color: var(--forest); color: var(--cream); min-height: 82vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+    .hero__left { padding: 64px 56px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid rgba(240,234,214,0.1); position: relative; }
+    .hero__catalog-tag { display: flex; align-items: center; gap: 14px; font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-soft); }
+    .hero__catalog-tag::before { content: ''; width: 28px; height: 1px; background: rgba(240,234,214,0.3); }
+    .hero__title { font-family: 'Times New Roman', Times, serif; font-size: clamp(58px, 9vw, 126px); font-weight: 700; line-height: 0.88; letter-spacing: -0.02em; }
+    .hero__title em { font-style: italic; font-weight: 300; display: block; font-size: clamp(46px, 7vw, 100px); color: var(--gold-soft); }
+    .hero__tagline { font-family: 'Times New Roman', Times, serif; font-size: clamp(16px, 1.8vw, 22px); font-weight: 300; font-style: italic; color: rgba(240,234,214,0.7); line-height: 1.4; }
+    .hero__bottom { border-top: 1px solid rgba(240,234,214,0.12); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .hero__count { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.45); }
+    .hero__scroll-cta { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.45); }
+    .hero__right { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; }
+    .hero__photo { overflow: hidden; position: relative; }
+    .hero__photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(45%); transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .hero__photo:hover img { transform: scale(1.04); }
+    .hero__photo-label { position: absolute; bottom: 12px; left: 14px; font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(240,234,214,0.85); background: rgba(7,56,38,0.6); padding: 4px 8px; }
+
+    /* ── INTRO BAND ────────────────────────────────────── */
+    .intro-band { background-color: var(--paper); border-bottom: 1px solid rgba(10,77,52,0.14); padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .intro-band__item { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.5); }
+    .intro-band__sep { width: 1px; height: 14px; background: rgba(10,77,52,0.2); }
+
+    /* ── FABRIC GRID ───────────────────────────────────── */
+    .fabric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; background-color: rgba(10,77,52,0.12); }
+    .fabric-card { position: relative; overflow: hidden; cursor: pointer; background: var(--forest); height: 620px; }
+    .fabric-card__img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease; filter: grayscale(15%); }
+    .fabric-card:hover .fabric-card__img { transform: scale(1.06); filter: grayscale(0%); }
+    .fabric-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(7,56,38,0.94) 0%, rgba(7,56,38,0.45) 42%, rgba(7,56,38,0.05) 75%, transparent 100%); transition: background 0.5s ease; }
+    .fabric-card:hover .fabric-card__overlay { background: linear-gradient(to top, rgba(7,56,38,0.97) 0%, rgba(7,56,38,0.6) 50%, rgba(7,56,38,0.15) 80%, transparent 100%); }
+    .fabric-card__content { position: absolute; bottom: 0; left: 0; right: 0; padding: 36px; color: var(--cream); }
+    .fabric-card__num { font-size: 9px; letter-spacing: 0.32em; color: var(--gold-soft); margin-bottom: 10px; display: block; }
+    .fabric-card__name { font-family: 'Times New Roman', Times, serif; font-size: clamp(28px, 3.2vw, 42px); font-weight: 700; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 6px; }
+    .fabric-card__subtitle { font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(240,234,214,0.6); margin-bottom: 0; transition: margin-bottom 0.4s ease; }
+    .fabric-card__hover-info { overflow: hidden; max-height: 0; transition: max-height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .fabric-card:hover .fabric-card__hover-info { max-height: 160px; }
+    .fabric-card__desc { font-size: 12px; line-height: 1.8; color: rgba(240,234,214,0.75); margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(240,234,214,0.15); max-width: 380px; }
+    .fabric-card__btn { margin-top: 16px; display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest); background: var(--cream); border: 1px solid var(--cream); padding: 11px 22px; transition: background 0.25s ease, opacity 0.25s ease; cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500; }
+    .fabric-card__btn:hover { opacity: 0.85; }
+    .fabric-card__btn::after { content: '→'; }
+    .fabric-card__badge { position: absolute; top: 20px; right: 20px; font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--forest); background: var(--gold-soft); padding: 5px 10px; }
+
+    /* ── COMPARISON TABLE ──────────────────────────────── */
+    .compare { background-color: var(--cream); padding: 88px 48px; }
+    .compare__header { display: grid; grid-template-columns: 200px 1fr; align-items: end; margin-bottom: 44px; padding-bottom: 36px; border-bottom: 1px solid rgba(10,77,52,0.16); gap: 40px; }
+    .compare__header .label-sm { color: var(--forest); }
+    .compare__title { font-family: 'Times New Roman', Times, serif; font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; color: var(--forest); }
+    .compare__table-wrap { background: var(--paper); border: 1px solid rgba(10,77,52,0.14); }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.42); font-weight: 500; padding: 16px 24px; text-align: left; border-bottom: 1px solid rgba(10,77,52,0.14); background: var(--forest); color: var(--gold-soft); }
+    thead th:first-child { color: rgba(240,234,214,0.5); }
+    tbody tr { border-bottom: 1px solid rgba(10,77,52,0.08); transition: background 0.2s ease; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(10,77,52,0.04); }
+    tbody td { padding: 16px 24px; font-size: 12px; color: rgba(42,42,40,0.75); font-weight: 300; }
+    tbody td:first-child { font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: var(--forest); }
+
+    /* ── BOTTOM CTA ────────────────────────────────────── */
+    .bottom-cta { background-color: var(--forest-deep); color: var(--cream); padding: 80px 48px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .bottom-cta__text h2 { font-family: 'Times New Roman', Times, serif; font-size: clamp(26px, 3.5vw, 44px); font-weight: 700; line-height: 1.15; margin-bottom: 10px; }
+    .bottom-cta__text p { font-size: 12px; color: rgba(240,234,214,0.55); letter-spacing: 0.03em; }
+    .bottom-cta__btn { flex-shrink: 0; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest); background: var(--cream); padding: 16px 36px; cursor: pointer; border: none; font-family: 'Jost', sans-serif; font-weight: 500; transition: background 0.25s ease, color 0.25s ease; display: flex; align-items: center; gap: 10px; }
+    .bottom-cta__btn::after { content: '→'; }
+    .bottom-cta__btn:hover { background: var(--gold-soft); }
+
+    /* ── TICKER ────────────────────────────────────────── */
+    .ticker { background-color: var(--forest-deep); overflow: hidden; padding: 13px 0; border-top: 1px solid rgba(240,234,214,0.1); }
+    .ticker__inner { display: flex; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+    .ticker__item { font-size: 10px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(240,234,214,0.6); padding: 0 32px; flex-shrink: 0; display: inline-flex; align-items: center; gap: 16px; }
+    .ticker__dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; display: inline-block; }
+    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── FOOTER ────────────────────────────────────────── */
+    .footer { background-color: var(--forest-deep); color: var(--cream); padding: 56px 48px 44px; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 48px; border-top: 1px solid rgba(240,234,214,0.08); }
+    .footer__brand { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .footer__brand img { height: 46px; width: 46px; border-radius: 50%; }
+    .footer__brand-name { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer__tagline { font-size: 11px; letter-spacing: 0.12em; color: var(--gold-soft); max-width: 260px; }
+    .footer__col-title { font-size: 9px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.4); margin-bottom: 22px; }
+    .footer__link { font-size: 12px; font-weight: 300; letter-spacing: 0.05em; color: rgba(240,234,214,0.78); line-height: 1.7; transition: color 0.2s ease; display: block; }
+    .footer__link:hover { color: var(--gold-soft); }
+    .footer__links { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── MODAL ─────────────────────────────────────────── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(7,56,38,0.82); z-index: 800; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; backdrop-filter: blur(3px); }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-panel { background: var(--paper); width: 540px; max-width: calc(100vw - 40px); max-height: 92vh; overflow-y: auto; position: relative; transform: translateY(24px) scale(0.98); transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .modal-overlay.active .modal-panel { transform: translateY(0) scale(1); }
+    .modal-header { background: var(--forest); color: var(--cream); padding: 28px 36px; display: flex; align-items: flex-start; justify-content: space-between; }
+    .modal-fabric-tag { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); display: block; margin-bottom: 6px; }
+    .modal-selected-fabric { font-family: 'Times New Roman', Times, serif; font-size: 24px; font-weight: 700; letter-spacing: 0.01em; line-height: 1.1; }
+    .modal-close { background: none; border: none; color: rgba(240,234,214,0.6); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; transition: color 0.2s ease; margin-top: 2px; }
+    .modal-close:hover { color: var(--cream); }
+    .modal-body { padding: 36px; }
+    .modal-intro { font-size: 11.5px; color: rgba(42,42,40,0.55); margin-bottom: 28px; line-height: 1.7; padding-bottom: 24px; border-bottom: 1px solid rgba(10,77,52,0.12); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+    .form-field { margin-bottom: 24px; }
+    .form-field.full { grid-column: span 2; }
+    .form-label { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.45); margin-bottom: 8px; font-weight: 500; }
+    .form-input, .form-select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.25); padding: 10px 0; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300; color: var(--charcoal); outline: none; transition: border-color 0.25s ease; border-radius: 0; appearance: none; }
+    .form-input:focus, .form-select:focus { border-bottom-color: var(--forest); }
+    .form-input::placeholder { color: rgba(42,42,40,0.25); font-size: 12px; }
+    .form-select-wrap { position: relative; }
+    .form-select-wrap::after { content: '↓'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 12px; color: rgba(42,42,40,0.35); pointer-events: none; }
+    .form-select option { background: var(--paper); }
+    .form-submit { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 18px; font-family: 'Jost', sans-serif; font-size: 10.5px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.25s ease, opacity 0.25s ease; }
+    .form-submit::after { content: '→'; font-size: 14px; font-weight: 300; }
+    .form-submit:hover { background: var(--forest-deep); }
+    .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .success-state { display: none; text-align: center; padding: 48px 36px; }
+    .success-check { width: 52px; height: 52px; border: 1px solid rgba(10,77,52,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 20px; color: var(--forest); }
+    .success-heading { font-family: 'Times New Roman', Times, serif; font-size: 28px; font-weight: 700; margin-bottom: 12px; color: var(--forest); }
+    .success-body { font-size: 12px; color: rgba(42,42,40,0.55); line-height: 1.8; margin-bottom: 32px; }
+    .success-close-btn { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.5); background: none; border: 1px solid rgba(10,77,52,0.2); padding: 12px 28px; cursor: pointer; font-family: 'Jost', sans-serif; transition: border-color 0.2s ease, color 0.2s ease; }
+    .success-close-btn:hover { border-color: var(--forest); color: var(--forest); }
+
+    .fade-up.will-animate { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .fade-up.visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+    .nav__hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px 4px; color: var(--forest); }
+    .nav__hamburger span { display: block; width: 22px; height: 1.5px; background: currentColor; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .nav__hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav__hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    body.menu-open { overflow: hidden; }
+    .mobile-menu { position: fixed; inset: 0; background: var(--forest); z-index: 490; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transform: translateY(-16px); transition: opacity 0.35s ease, transform 0.35s ease; }
+    .mobile-menu.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .mobile-menu__links { display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; padding: 0 40px; }
+    .mobile-menu__links a { font-family: 'Times New Roman', Times, serif; font-size: 36px; font-weight: 400; letter-spacing: 0.02em; color: rgba(240,234,214,0.85); text-decoration: none; padding: 14px 0; border-bottom: 1px solid rgba(240,234,214,0.12); width: 100%; text-align: center; transition: color 0.2s ease; }
+    .mobile-menu__links a:first-child { border-top: 1px solid rgba(240,234,214,0.12); }
+    .mobile-menu__links a:hover { color: var(--gold-soft); }
+    .mobile-menu__footer { position: absolute; bottom: 36px; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(240,234,214,0.3); }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 20px; }
+      .nav__links { display: none !important; }
+      .nav__cta { display: none !important; }
+      .nav__hamburger { display: flex; }
+
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero__left { padding: 44px 20px 36px; border-right: none; border-bottom: 1px solid rgba(240,234,214,0.1); }
+      .hero__title { font-size: clamp(48px, 13vw, 84px); }
+      .hero__right { grid-template-columns: 1fr 1fr; height: 300px; }
+
+      .intro-band { padding: 14px 20px; }
+      .intro-band__sep { display: none; }
+
+      .fabric-grid { grid-template-columns: 1fr; }
+      .fabric-card { height: 380px !important; }
+
+      .compare { padding: 56px 20px; }
+      .compare__header { grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; padding-bottom: 28px; }
+      .compare__table-wrap { overflow-x: auto; }
+      table { min-width: 480px; }
+
+      .bottom-cta { flex-direction: column; padding: 56px 20px; gap: 28px; text-align: center; }
+
+      .footer { grid-template-columns: 1fr; padding: 40px 20px; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav__brand-wrap">
+      <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company" class="nav__logo">
+      <span class="nav__brand-name">WSC<span>The White Shirt Co.</span></span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="fabrics.html" class="active">Fabrics</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <div class="nav__right">
+      <span class="nav__cta" id="nav-sample-cta">Request Swatch</span>
+      <a href="catalogue.html" class="cart-link" title="View Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="nav-cart-badge">0</span>
+      </a>
+      <button class="nav__hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__links">
+      <a href="index.html" onclick="toggleMobileMenu()">Home</a>
+      <a href="about.html" onclick="toggleMobileMenu()">About</a>
+      <a href="catalogue.html" onclick="toggleMobileMenu()">Catalogue</a>
+      <a href="fabrics.html" onclick="toggleMobileMenu()">Fabrics</a>
+      <a href="contact.html" onclick="toggleMobileMenu()">Contact Us</a>
+    </div>
+    <p class="mobile-menu__footer">The White Shirt Company — A Statement In Every Stitch</p>
+  </div>
+
+  <section class="hero">
+    <div class="hero__left">
+      <div class="hero__catalog-tag">The Material Story</div>
+      <div>
+        <h1 class="hero__title">WSC<br><em>Fabrics</em></h1>
+        <p class="hero__tagline" style="margin-top:28px;">Two fabrics. Chosen with<br>precision, not compromise.</p>
+      </div>
+      <div class="hero__bottom">
+        <span class="hero__count">02 Fabrics. One Standard.</span>
+        <span class="hero__scroll-cta">↓ Explore</span>
+      </div>
+    </div>
+    <div class="hero__right">
+      <div class="hero__photo">
+        <img src="website_images/giza-cotton.jpg" alt="Cotton fabric">
+        <span class="hero__photo-label">Cotton</span>
+      </div>
+      <div class="hero__photo">
+        <img src="website_images/linen.jpg" alt="Linen fabric">
+        <span class="hero__photo-label">Linen</span>
+      </div>
+      <div class="hero__photo">
+        <img src="website_images/bd2ae5ec3775e588d3e1aff0162b2999.jpg" alt="Cotton shirt worn">
+        <span class="hero__photo-label">Worn — Cotton</span>
+      </div>
+      <div class="hero__photo">
+        <img src="website_images/cabb479a02e9b43b798a8507df8cc1f3.jpg" alt="Linen shirt worn">
+        <span class="hero__photo-label">Worn — Linen</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="intro-band">
+    <span class="intro-band__item">Considered Sourcing</span>
+    <div class="intro-band__sep"></div>
+    <span class="intro-band__item">Two Fabrics Only</span>
+    <div class="intro-band__sep"></div>
+    <span class="intro-band__item">Built For Daily Wear</span>
+    <div class="intro-band__sep"></div>
+    <span class="intro-band__item">No Synthetic Blends</span>
+  </div>
+
+  <div class="fabric-grid">
+    <div class="fabric-card" data-fabric="cotton">
+      <img class="fabric-card__img" src="website_images/giza-cotton.jpg" alt="Cotton">
+      <div class="fabric-card__overlay"></div>
+      <span class="fabric-card__badge">Structured</span>
+      <div class="fabric-card__content">
+        <span class="fabric-card__num">01</span>
+        <h3 class="fabric-card__name">Cotton</h3>
+        <p class="fabric-card__subtitle">Crisp. Clean. Considered.</p>
+        <div class="fabric-card__hover-info">
+          <p class="fabric-card__desc">A long-staple cotton poplin with a smooth hand and a crisp finish — built to hold a clean line from morning to night.</p>
+          <button class="fabric-card__btn" data-fabric-id="cotton">Request Swatch</button>
+        </div>
+      </div>
+    </div>
+    <div class="fabric-card" data-fabric="linen">
+      <img class="fabric-card__img" src="website_images/linen.jpg" alt="Linen">
+      <div class="fabric-card__overlay"></div>
+      <span class="fabric-card__badge">Breathable</span>
+      <div class="fabric-card__content">
+        <span class="fabric-card__num">02</span>
+        <h3 class="fabric-card__name">Linen</h3>
+        <p class="fabric-card__subtitle">Soft. Airy. Unhurried.</p>
+        <div class="fabric-card__hover-info">
+          <p class="fabric-card__desc">A softly textured linen that breathes in the heat and only grows more comfortable — and more itself — with every wear.</p>
+          <button class="fabric-card__btn" data-fabric-id="linen">Request Swatch</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="compare fade-up">
+    <div class="compare__header">
+      <span class="label-sm">Side By Side</span>
+      <h2 class="compare__title">Cotton vs. Linen</h2>
+    </div>
+    <div class="compare__table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Cotton</th>
+            <th>Linen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Feel</td><td>Smooth, crisp</td><td>Textured, soft</td></tr>
+          <tr><td>Weight</td><td>Mid-weight</td><td>Lightweight</td></tr>
+          <tr><td>Best For</td><td>Everyday structure</td><td>Warm-weather ease</td></tr>
+          <tr><td>Breathability</td><td>Good</td><td>Excellent</td></tr>
+          <tr><td>Care</td><td>Machine wash, cool iron</td><td>Machine wash, wear creased or press</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="bottom-cta fade-up">
+    <div class="bottom-cta__text">
+      <h2>Ready to feel the difference?</h2>
+      <p>Request a free swatch of either fabric, or shop the finished shirt directly.</p>
+    </div>
+    <button class="bottom-cta__btn" id="bottom-order-btn">Request Swatch</button>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker__inner">
+      <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+      <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+      <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+      <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+      <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+      <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+      <span class="ticker__item">Cotton <span class="ticker__dot"></span></span>
+      <span class="ticker__item">Linen <span class="ticker__dot"></span></span>
+      <span class="ticker__item">A Statement In Every Stitch <span class="ticker__dot"></span></span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div>
+      <div class="footer__brand">
+        <img src="brand_assets/brand_logo.jpg" alt="The White Shirt Company">
+        <span class="footer__brand-name">The White Shirt Co.</span>
+      </div>
+      <p class="footer__tagline">A statement in every stitch. One silhouette, two fabrics, no compromises.</p>
+    </div>
+    <div>
+      <p class="footer__col-title">Navigate</p>
+      <div class="footer__links">
+        <a href="about.html" class="footer__link">About</a>
+        <a href="catalogue.html" class="footer__link">Catalogue</a>
+        <a href="fabrics.html" class="footer__link">Fabrics</a>
+        <a href="contact.html" class="footer__link">Contact Us</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer__col-title">Contact</p>
+      <div class="footer__links">
+        <a href="mailto:Support@thewhiteshirtcompany.in" class="footer__link">Support@thewhiteshirtcompany.in</a>
+        <a href="tel:+919034509969" class="footer__link">+91 90345 09969</a>
+        <a href="tel:+918168318654" class="footer__link">+91 81683 18654</a>
+        <a href="https://www.thewhiteshirtcompany.in" target="_blank" rel="noopener" class="footer__link">www.thewhiteshirtcompany.in</a>
+        <a href="https://www.instagram.com/thewhiteshirt_company" target="_blank" rel="noopener" class="footer__link">@thewhiteshirt_company</a>
+      </div>
+    </div>
+    <div style="grid-column:1/-1;border-top:1px solid rgba(240,234,214,0.08);padding-top:20px;display:flex;justify-content:flex-end;">
+      <a href="admin.html" style="font-size:10px;font-weight:300;letter-spacing:0.18em;text-transform:uppercase;color:rgba(240,234,214,0.2);transition:color 0.25s ease;" onmouseover="this.style.color='rgba(240,234,214,0.55)'" onmouseout="this.style.color='rgba(240,234,214,0.2)'">Admin</a>
+    </div>
+  </footer>
+
+  <!-- ─── SWATCH REQUEST MODAL ───────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <span class="modal-fabric-tag">Selected Fabric</span>
+          <span class="modal-selected-fabric" id="modal-fabric-name">Both Fabrics</span>
+        </div>
+        <button class="modal-close" id="modal-close-btn">✕</button>
+      </div>
+
+      <div class="modal-body" id="modal-form-wrap">
+        <p class="modal-intro">Fill in your details and we'll post a free fabric swatch to you, along with sizing guidance for the finished shirt.</p>
+        <form id="order-form" class="form-grid" novalidate>
+          <input type="hidden" name="fabric" id="form-fabric">
+          <div class="form-field">
+            <label class="form-label">Full Name *</label>
+            <input class="form-input" type="text" name="name" required placeholder="Your full name">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email Address *</label>
+            <input class="form-input" type="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-field full">
+            <label class="form-label">Shipping Address *</label>
+            <input class="form-input" type="text" name="address" required placeholder="Street, city, postcode, country">
+          </div>
+          <div class="form-field full">
+            <label class="form-label">Fabric Preference</label>
+            <div class="form-select-wrap">
+              <select class="form-select" name="fabric_pref" id="form-fabric-pref">
+                <option value="Cotton">Cotton</option>
+                <option value="Linen">Linen</option>
+                <option value="Both">Both Swatches</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field full" style="margin-top:8px;">
+            <button type="submit" class="form-submit" id="form-submit-btn">Request Swatch</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="success-state" id="success-state">
+        <div class="success-check">✓</div>
+        <h3 class="success-heading">Request Received</h3>
+        <p class="success-body">Thank you for reaching out.<br>Your swatch will ship shortly — we typically<br>respond within 24 business hours.</p>
+        <button class="success-close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('navHamburger').classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    }
+
+    const overlay = document.getElementById('modal-overlay');
+    const fabricNameEl = document.getElementById('modal-fabric-name');
+    const formFabricInput = document.getElementById('form-fabric');
+    const fabricPrefSelect = document.getElementById('form-fabric-pref');
+    const formWrap = document.getElementById('modal-form-wrap');
+    const successState = document.getElementById('success-state');
+
+    const fabricNames = { cotton: 'Cotton', linen: 'Linen' };
+
+    function openModal(fabricId) {
+      const name = fabricId ? fabricNames[fabricId] : 'Both Fabrics';
+      fabricNameEl.textContent = name;
+      formFabricInput.value = name;
+      if (fabricId) fabricPrefSelect.value = name; else fabricPrefSelect.value = 'Both';
+
+      document.getElementById('order-form').reset();
+      formFabricInput.value = name;
+      fabricPrefSelect.value = fabricId ? name : 'Both';
+      formWrap.style.display = 'block';
+      successState.style.display = 'none';
+
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-fabric-id]');
+      if (btn) openModal(btn.dataset.fabricId);
+    });
+
+    document.getElementById('nav-sample-cta').addEventListener('click', () => openModal(null));
+    document.getElementById('bottom-order-btn').addEventListener('click', () => openModal(null));
+
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    document.getElementById('order-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = document.getElementById('form-submit-btn');
+
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(input => {
+        if (!input.value.trim()) {
+          input.style.borderBottomColor = '#a13a3a';
+          valid = false;
+          input.addEventListener('input', () => { input.style.borderBottomColor = ''; }, { once: true });
+        }
+      });
+      if (!valid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      setTimeout(() => {
+        formWrap.style.display = 'none';
+        successState.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request Swatch';
+      }, 700);
+    });
+
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('will-animate'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    (function () {
+      const badge = document.getElementById('nav-cart-badge');
+      const count = wscCartCount();
+      badge.textContent = count;
+      badge.classList.toggle('visible', count > 0);
+    })();
+  </script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
