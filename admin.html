@@ -34,15 +34,15 @@
     .gate__panel { background: var(--paper); width: 380px; max-width: 100%; padding: 44px 36px; text-align: center; }
     .gate__logo { height: 52px; width: 52px; border-radius: 50%; margin: 0 auto 20px; display: block; }
     .gate__title { font-family: 'Times New Roman', Times, serif; font-size: 26px; font-weight: 700; color: var(--forest); margin-bottom: 6px; }
-    .gate__sub { font-size: 11.5px; color: rgba(42,42,40,0.55); margin-bottom: 28px; }
+    .gate__sub { font-size: 12.5px; color: rgba(42,42,40,0.72); margin-bottom: 28px; }
     .gate__field { text-align: left; margin-bottom: 20px; }
-    .gate__label { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(42,42,40,0.45); margin-bottom: 8px; font-weight: 500; }
+    .gate__label { display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(42,42,40,0.72); margin-bottom: 8px; font-weight: 500; }
     .gate__input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.25); padding: 10px 0; font-family: 'Jost', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; transition: border-color 0.2s ease; }
     .gate__input:focus { border-bottom-color: var(--forest); }
     .gate__btn { width: 100%; background: var(--forest); color: var(--cream); border: none; padding: 15px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; transition: background 0.2s ease; }
     .gate__btn:hover { background: var(--forest-deep); }
-    .gate__error { font-size: 11px; color: var(--red); margin-top: 14px; display: none; }
-    .gate__hint { font-size: 10px; color: rgba(42,42,40,0.35); margin-top: 24px; line-height: 1.7; }
+    .gate__error { font-size: 12.5px; color: var(--red); margin-top: 14px; display: none; }
+    .gate__hint { font-size: 12px; color: rgba(42,42,40,0.7); margin-top: 24px; line-height: 1.7; }
 
     /* ── DASHBOARD SHELL ───────────────────────────────── */
     .dash { display: none; }
@@ -56,13 +56,13 @@
     .topbar__right { display: flex; align-items: center; gap: 20px; }
     .topbar__link { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,234,214,0.75); transition: color 0.2s ease; }
     .topbar__link:hover { color: var(--cream); }
-    .topbar__logout { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,234,214,0.55); border: 1px solid rgba(240,234,214,0.25); padding: 8px 16px; transition: all 0.2s ease; }
+    .topbar__logout { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(240,234,214,0.85); background: none; border: 1px solid rgba(240,234,214,0.35); padding: 8px 16px; transition: border-color 0.2s ease, color 0.2s ease; }
     .topbar__logout:hover { border-color: var(--cream); color: var(--cream); }
 
     .notice { background: var(--gold-soft); color: var(--forest-deep); font-size: 11.5px; padding: 12px 32px; text-align: center; letter-spacing: 0.02em; }
 
     .tabs { display: flex; gap: 4px; padding: 0 32px; background: var(--paper); border-bottom: 1px solid rgba(10,77,52,0.14); }
-    .tab-btn { padding: 18px 22px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(42,42,40,0.45); background: none; border: none; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+    .tab-btn { padding: 18px 22px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(42,42,40,0.7); background: none; border: none; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
     .tab-btn:hover { color: var(--forest); }
     .tab-btn.active { color: var(--forest); border-bottom-color: var(--forest); }
 
@@ -74,7 +74,7 @@
     .stat-tile { background: var(--forest); color: var(--cream); padding: 26px 24px; }
     .stat-tile__label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 14px; display: block; }
     .stat-tile__val { font-family: 'Times New Roman', Times, serif; font-size: 30px; font-weight: 700; }
-    .stat-tile__sub { font-size: 10.5px; color: rgba(240,234,214,0.55); margin-top: 6px; }
+    .stat-tile__sub { font-size: 12px; color: rgba(240,234,214,0.8); margin-top: 6px; }
 
     .section-title { font-family: 'Times New Roman', Times, serif; font-size: 20px; font-weight: 700; color: var(--forest); margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
     .section-title .danger-btn { font-family: 'Jost', sans-serif; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); background: none; border: 1px solid rgba(161,58,58,0.35); padding: 8px 14px; font-weight: 500; transition: all 0.2s ease; }
@@ -101,9 +101,49 @@
     tbody td { padding: 14px 20px; font-size: 12px; color: rgba(42,42,40,0.75); vertical-align: top; }
     tbody td.mono { font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: var(--forest); }
 
-    .empty-state { text-align: center; padding: 56px 20px; color: rgba(42,42,40,0.45); }
+    .empty-state { text-align: center; padding: 56px 20px; color: rgba(42,42,40,0.72); }
     .empty-state__title { font-family: 'Times New Roman', Times, serif; font-size: 20px; font-style: italic; color: var(--forest); margin-bottom: 10px; }
-    .empty-state__body { font-size: 12px; max-width: 380px; margin: 0 auto; line-height: 1.8; }
+    .empty-state__body { font-size: 13px; max-width: 380px; margin: 0 auto; line-height: 1.8; }
+
+    /* ── ORDERS ────────────────────────────────────────── */
+    .section-title .refresh-btn { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--forest); background: none; border: 1px solid rgba(10,77,52,0.3); padding: 8px 14px; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .section-title .refresh-btn:hover { background: var(--forest); color: var(--cream); }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .filter-btn { font-family: 'Jost', sans-serif; font-size: 12.5px; font-weight: 500; color: rgba(42,42,40,0.75); background: none; border: 1px solid rgba(10,77,52,0.2); padding: 8px 14px; display: inline-flex; align-items: center; gap: 8px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .filter-btn:hover { border-color: var(--forest); color: var(--forest); }
+    .filter-btn.active { background: var(--forest); border-color: var(--forest); color: var(--cream); }
+    .filter-count { font-size: 11.5px; min-width: 22px; padding: 1px 6px; text-align: center; background: rgba(10,77,52,0.1); }
+    .filter-btn.active .filter-count { background: rgba(240,234,214,0.2); }
+    .orders-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 44px; }
+    .order-card { background: var(--paper); border: 1px solid rgba(10,77,52,0.14); border-left: 3px solid var(--gold); }
+    .order-card.is-approved { border-left-color: var(--forest); }
+    .order-card.is-rejected { border-left-color: var(--red); }
+    .order-card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 20px; border-bottom: 1px solid rgba(10,77,52,0.1); }
+    .order-card__id { font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: var(--forest); }
+    .order-card__date { font-size: 12.5px; color: rgba(42,42,40,0.68); margin-top: 2px; }
+    .status-badge { font-size: 12px; font-weight: 500; padding: 4px 10px; white-space: nowrap; }
+    .status-badge.pending { background: var(--gold-soft); color: #5a4c0c; }
+    .status-badge.approved { background: rgba(10,77,52,0.12); color: var(--forest); }
+    .status-badge.rejected { background: rgba(161,58,58,0.1); color: var(--red); }
+    .order-card__body { display: grid; grid-template-columns: 1.25fr 1fr 0.9fr; gap: 20px; padding: 18px 20px; }
+    .order-card__label { display: block; font-size: 12px; color: rgba(42,42,40,0.72); margin-bottom: 6px; }
+    .order-card__text { font-size: 13.5px; line-height: 1.7; color: var(--charcoal); overflow-wrap: anywhere; }
+    .order-card__text a { color: var(--forest); text-decoration: underline; text-underline-offset: 2px; }
+    .order-card__amount { font-family: 'Times New Roman', Times, serif; font-size: 22px; font-weight: 700; color: var(--forest); line-height: 1.2; }
+    .order-card__utr { font-size: 13.5px; margin-top: 6px; letter-spacing: 0.04em; }
+    .order-card__warn { font-size: 12.5px; color: var(--red); margin-top: 8px; line-height: 1.5; }
+    .order-card__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 20px; border-top: 1px solid rgba(10,77,52,0.1); background: rgba(240,234,214,0.35); }
+    .order-card__decided { font-size: 12.5px; color: rgba(42,42,40,0.7); margin-right: auto; }
+    .action-btn { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; padding: 10px 16px; border: 1px solid transparent; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .action-btn.approve { background: var(--forest); color: var(--cream); }
+    .action-btn.approve:hover { background: var(--forest-deep); }
+    .action-btn.reject { background: none; color: var(--red); border-color: rgba(161,58,58,0.35); }
+    .action-btn.reject:hover { background: rgba(161,58,58,0.08); border-color: var(--red); }
+    .action-btn.reset { background: none; color: rgba(42,42,40,0.75); border-color: rgba(10,77,52,0.22); }
+    .action-btn.reset:hover { border-color: var(--forest); color: var(--forest); }
+    .action-btn:disabled { opacity: 0.5; cursor: wait; }
+    .action-btn:active:not(:disabled), .filter-btn:active, .section-title .refresh-btn:active { transform: scale(0.97); }
+    .panel-notice { background: var(--gold-soft); color: var(--forest-deep); font-size: 12.5px; line-height: 1.6; padding: 12px 16px; margin-bottom: 28px; }
 
     /* ── PRODUCTS PANEL ────────────────────────────────── */
     .product-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
@@ -120,10 +160,10 @@
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
     .field { margin-bottom: 18px; }
-    .field__label { display: block; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(42,42,40,0.45); margin-bottom: 8px; font-weight: 500; }
+    .field__label { display: block; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(42,42,40,0.72); margin-bottom: 8px; font-weight: 500; }
     .field__input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(10,77,52,0.22); padding: 9px 0; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--charcoal); outline: none; transition: border-color 0.2s ease; }
     .field__input:focus { border-bottom-color: var(--forest); }
-    .field__hint { font-size: 10.5px; color: var(--gold); margin-top: 6px; }
+    .field__hint { font-size: 12px; color: #6b5d10; margin-top: 6px; }
 
     .stock-toggle { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
     .switch { position: relative; width: 42px; height: 22px; flex-shrink: 0; }
@@ -163,6 +203,11 @@
       .product-edit-grid { grid-template-columns: 1fr; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
       .topbar__link { display: none; }
+      .order-card__body { grid-template-columns: 1fr; gap: 14px; }
+    }
+    @media (max-width: 600px) {
+      .topbar { padding: 0 16px; }
+      .tabs, .panel { padding-left: 16px; padding-right: 16px; }
     }
   </style>
 </head>
@@ -176,13 +221,17 @@
       <p class="gate__sub">Restricted area — for The White Shirt Company staff only.</p>
       <form id="gate-form">
         <div class="gate__field">
-          <label class="gate__label">Access Code</label>
-          <input class="gate__input" type="password" id="gate-password" placeholder="Enter access code" autocomplete="off">
+          <label class="gate__label" for="gate-username">Username</label>
+          <input class="gate__input" type="text" id="gate-username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
         </div>
-        <button type="submit" class="gate__btn">Enter Dashboard</button>
-        <p class="gate__error" id="gate-error">Incorrect access code. Try again.</p>
+        <div class="gate__field">
+          <label class="gate__label" for="gate-password">Password</label>
+          <input class="gate__input" type="password" id="gate-password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="gate__btn" id="gate-btn">Log In</button>
+        <p class="gate__error" id="gate-error" role="alert"></p>
       </form>
-      <p class="gate__hint">This is a local, browser-only admin prototype — not a secured production login. Do not reuse this password elsewhere.</p>
+      <p class="gate__hint">You stay logged in for 12 hours on this device.</p>
     </div>
   </div>
 
@@ -199,50 +248,55 @@
       </div>
     </div>
 
-    <div class="notice">This dashboard reads and writes data stored only in this browser (localStorage) — it is not a shared, multi-user backend.</div>
-
     <div class="tabs">
-      <button class="tab-btn active" data-panel="overview">Overview &amp; Sales</button>
+      <button class="tab-btn active" data-panel="orders">Orders</button>
       <button class="tab-btn" data-panel="products">Products</button>
     </div>
 
-    <!-- OVERVIEW / STATS -->
-    <div class="panel active" id="panel-overview">
+    <!-- ORDERS -->
+    <div class="panel active" id="panel-orders">
       <div class="stat-grid">
         <div class="stat-tile">
-          <span class="stat-tile__label">Total Revenue</span>
+          <span class="stat-tile__label">To Review</span>
+          <div class="stat-tile__val" id="stat-pending">0</div>
+          <div class="stat-tile__sub">Payments waiting for a check</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-tile__label">Approved Revenue</span>
           <div class="stat-tile__val" id="stat-revenue">₹0</div>
-          <div class="stat-tile__sub" id="stat-revenue-usd"></div>
+          <div class="stat-tile__sub" id="stat-revenue-sub">No approved orders yet</div>
         </div>
         <div class="stat-tile">
-          <span class="stat-tile__label">Total Orders</span>
-          <div class="stat-tile__val" id="stat-orders">0</div>
-          <div class="stat-tile__sub">All time</div>
-        </div>
-        <div class="stat-tile">
-          <span class="stat-tile__label">Units Sold</span>
+          <span class="stat-tile__label">Shirts Sold</span>
           <div class="stat-tile__val" id="stat-units">0</div>
-          <div class="stat-tile__sub">Shirts shipped</div>
+          <div class="stat-tile__sub">In approved orders</div>
         </div>
         <div class="stat-tile">
           <span class="stat-tile__label">Avg. Order Value</span>
           <div class="stat-tile__val" id="stat-aov">₹0</div>
-          <div class="stat-tile__sub">Per order</div>
+          <div class="stat-tile__sub">Approved orders</div>
         </div>
       </div>
 
+      <h2 class="section-title">
+        Orders
+        <button class="refresh-btn" id="refresh-orders-btn">Refresh</button>
+      </h2>
+      <div class="filter-row">
+        <button class="filter-btn active" data-filter="pending">Pending <span class="filter-count" id="count-pending">0</span></button>
+        <button class="filter-btn" data-filter="approved">Approved <span class="filter-count" id="count-approved">0</span></button>
+        <button class="filter-btn" data-filter="rejected">Rejected <span class="filter-count" id="count-rejected">0</span></button>
+        <button class="filter-btn" data-filter="all">All <span class="filter-count" id="count-all">0</span></button>
+      </div>
+      <div class="orders-list" id="orders-list"></div>
+
       <h2 class="section-title">Revenue by Product</h2>
       <div class="chart-wrap" id="chart-wrap"></div>
-
-      <h2 class="section-title">
-        Recent Orders
-        <button class="danger-btn" id="clear-orders-btn">Clear Order History</button>
-      </h2>
-      <div class="table-wrap" id="orders-table-wrap"></div>
     </div>
 
     <!-- PRODUCTS -->
     <div class="panel" id="panel-products">
+      <p class="panel-notice">Changes on this tab only affect what this browser shows. Customers always see the prices and sizes in the website code, and checkout charges Cotton ₹1,200 and Linen ₹2,100, set on the order server.</p>
       <h2 class="section-title">
         Manage Products
         <button class="add-product-btn" id="toggle-add-product-btn">+ Add New Product</button>
@@ -300,42 +354,80 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const ADMIN_PASSWORD = 'wsc2026';
-    const SESSION_KEY = 'wsc_admin_session';
-
+    // ── LOGIN (checked by the order server; the session token lasts 12 hours) ──
+    const SESSION_KEY = 'wsc_admin_session_v2';
     const gateEl = document.getElementById('gate');
     const dashEl = document.getElementById('dash');
+    const gateError = document.getElementById('gate-error');
+
+    function loadSession() {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+        return saved && saved.token && saved.expiresAt > Date.now() ? saved : null;
+      } catch (e) { return null; }
+    }
+    let session = loadSession();
+
+    function showGateError(message) {
+      gateError.textContent = message;
+      gateError.style.display = message ? 'block' : 'none';
+    }
+
+    async function api(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (session) headers.Authorization = 'Bearer ' + session.token;
+      const response = await fetch(WSC_API_BASE + path, { ...options, headers });
+      const data = await response.json().catch(() => ({}));
+      if (response.status === 401 && path !== '/api/admin/login') {
+        logOut(data.error || 'Your session has expired. Log in again.');
+        throw new Error('logged out');
+      }
+      if (!response.ok) throw new Error(data.error || 'The order server returned an error (' + response.status + ').');
+      return data;
+    }
 
     function enterDashboard() {
       gateEl.style.display = 'none';
       dashEl.classList.add('active');
-      renderOverview();
+      loadOrders();
       renderProducts();
     }
 
-    if (sessionStorage.getItem(SESSION_KEY) === '1') {
-      enterDashboard();
+    function logOut(message) {
+      session = null;
+      sessionStorage.removeItem(SESSION_KEY);
+      dashEl.classList.remove('active');
+      gateEl.style.display = 'flex';
+      document.getElementById('gate-password').value = '';
+      showGateError(message || '');
     }
 
-    document.getElementById('gate-form').addEventListener('submit', e => {
+    document.getElementById('gate-form').addEventListener('submit', async e => {
       e.preventDefault();
-      const input = document.getElementById('gate-password');
-      const errorEl = document.getElementById('gate-error');
-      if (input.value === ADMIN_PASSWORD) {
-        sessionStorage.setItem(SESSION_KEY, '1');
-        errorEl.style.display = 'none';
+      const username = document.getElementById('gate-username').value.trim();
+      const passwordInput = document.getElementById('gate-password');
+      if (!username || !passwordInput.value) return showGateError('Enter your username and password.');
+
+      const btn = document.getElementById('gate-btn');
+      btn.disabled = true;
+      btn.textContent = 'Logging in…';
+      showGateError('');
+      try {
+        const result = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ username, password: passwordInput.value }) });
+        session = result;
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(result));
+        passwordInput.value = '';
         enterDashboard();
-      } else {
-        errorEl.style.display = 'block';
-        input.value = '';
-        input.focus();
+      } catch (err) {
+        showGateError(err.message === 'Failed to fetch' ? 'The order server could not be reached. Check your internet connection.' : err.message);
+        passwordInput.select();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Log In';
       }
     });
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      sessionStorage.removeItem(SESSION_KEY);
-      location.reload();
-    });
+    document.getElementById('logout-btn').addEventListener('click', () => logOut(''));
 
     // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -355,79 +447,146 @@
       showToast._t = setTimeout(() => toast.classList.remove('visible'), 2400);
     }
 
-    // ── OVERVIEW / STATS ──────────────────────────────────
-    function renderOverview() {
-      const orders = wscLoadOrders();
-      const products = wscLoadProducts();
+    // ── ORDERS ────────────────────────────────────────────
+    let orders = [];
+    let currentFilter = 'pending';
+    const ordersList = document.getElementById('orders-list');
+    const inr = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+    const when = iso => iso ? new Date(iso).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+    // Order details are typed by customers, so escape them before putting them on the page.
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-      const totalRevenue = orders.reduce((s, o) => s + o.totalInr, 0);
-      const totalOrders = orders.length;
-      const totalUnits = orders.reduce((s, o) => s + o.items.reduce((s2, i) => s2 + i.qty, 0), 0);
-      const aov = totalOrders ? Math.round(totalRevenue / totalOrders) : 0;
-
-      document.getElementById('stat-revenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
-      document.getElementById('stat-revenue-usd').textContent = totalOrders ? 'Across ' + totalOrders + ' order' + (totalOrders === 1 ? '' : 's') : 'No sales yet';
-      document.getElementById('stat-orders').textContent = totalOrders;
-      document.getElementById('stat-units').textContent = totalUnits;
-      document.getElementById('stat-aov').textContent = '₹' + aov.toLocaleString('en-IN');
-
-      // Revenue by product
-      const revenueByProduct = {};
-      products.forEach(p => { revenueByProduct[p.id] = 0; });
-      orders.forEach(o => o.items.forEach(i => { revenueByProduct[i.id] = (revenueByProduct[i.id] || 0) + i.priceInr * i.qty; }));
-      const maxRev = Math.max(1, ...Object.values(revenueByProduct));
-
-      const chartWrap = document.getElementById('chart-wrap');
-      if (totalOrders === 0) {
-        chartWrap.innerHTML = `<div class="empty-state">
-          <p class="empty-state__title">No sales data yet</p>
-          <p class="empty-state__body">Place a test order from the Catalogue page (add a shirt to cart → checkout) to see revenue and order stats appear here.</p>
+    async function loadOrders() {
+      if (!orders.length) ordersList.innerHTML = `<div class="empty-state"><p class="empty-state__body">Loading orders…</p></div>`;
+      try {
+        const data = await api('/api/admin/orders');
+        orders = data.orders || [];
+        renderOrders();
+      } catch (err) {
+        if (err.message === 'logged out') return;
+        ordersList.innerHTML = `<div class="empty-state">
+          <p class="empty-state__title">Orders did not load</p>
+          <p class="empty-state__body">${esc(err.message === 'Failed to fetch' ? 'The order server could not be reached. Check your internet connection, then press Refresh.' : err.message)}</p>
         </div>`;
-      } else {
-        chartWrap.innerHTML = products.map(p => {
-          const rev = revenueByProduct[p.id] || 0;
-          const pct = Math.round((rev / maxRev) * 100);
-          return `
-            <div class="chart-row">
-              <span class="chart-row__label">${p.name}</span>
-              <div class="chart-row__track"><div class="chart-row__fill" style="width:${pct}%"></div></div>
-              <span class="chart-row__val">₹${rev.toLocaleString('en-IN')}</span>
-            </div>
-          `;
-        }).join('');
-      }
-
-      // Recent orders table
-      const tableWrap = document.getElementById('orders-table-wrap');
-      if (totalOrders === 0) {
-        tableWrap.innerHTML = `<div class="empty-state">
-          <p class="empty-state__title">No orders placed yet</p>
-          <p class="empty-state__body">Completed orders from the Catalogue checkout will appear here with customer and item details.</p>
-        </div>`;
-      } else {
-        const rows = orders.slice(0, 20).map(o => `
-          <tr>
-            <td class="mono">${o.id}</td>
-            <td>${new Date(o.date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
-            <td>${o.customer.name}<br><span style="color:rgba(42,42,40,0.45);font-size:10.5px;">${o.customer.email}</span></td>
-            <td>${o.items.map(i => `${i.qty}× ${i.name} (${i.size})`).join('<br>')}</td>
-            <td class="mono">₹${o.totalInr.toLocaleString('en-IN')}</td>
-          </tr>
-        `).join('');
-        tableWrap.innerHTML = `
-          <table>
-            <thead><tr><th>Order ID</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
       }
     }
 
-    document.getElementById('clear-orders-btn').addEventListener('click', () => {
-      if (!confirm('Clear all order history? This cannot be undone.')) return;
-      wscClearOrders();
-      renderOverview();
-      showToast('Order history cleared');
+    function orderCardHtml(o) {
+      const items = o.items.map(i => `${i.qty} × ${esc(i.name)}, size ${esc(i.size)}: ${inr(i.lineTotalInr)}`).join('<br>');
+      const mismatch = o.amountMismatch
+        ? `<p class="order-card__warn">The customer was shown ${inr(o.clientTotalInr)}. Check the amount you received.</p>` : '';
+      const label = { pending: 'Pending', approved: 'Approved', rejected: 'Rejected' }[o.status] || o.status;
+      const actions = o.status === 'pending'
+        ? `<button class="action-btn approve" data-set-status="approved" data-order="${esc(o.id)}">Approve order</button>
+           <button class="action-btn reject" data-set-status="rejected" data-order="${esc(o.id)}">Reject order</button>`
+        : `<span class="order-card__decided">${label} ${esc(when(o.statusUpdatedAt))}</span>
+           <button class="action-btn reset" data-set-status="pending" data-order="${esc(o.id)}">Move back to pending</button>`;
+      return `
+        <article class="order-card is-${esc(o.status)}">
+          <header class="order-card__head">
+            <div>
+              <div class="order-card__id">${esc(o.id)}</div>
+              <div class="order-card__date">${esc(when(o.createdAt))}</div>
+            </div>
+            <span class="status-badge ${esc(o.status)}">${esc(label)}</span>
+          </header>
+          <div class="order-card__body">
+            <div>
+              <span class="order-card__label">Customer</span>
+              <p class="order-card__text">${esc(o.customer.name)}<br>
+                <a href="tel:${esc(o.customer.phone.replace(/[^\d+]/g, ''))}">${esc(o.customer.phone)}</a><br>
+                <a href="mailto:${esc(o.customer.email)}">${esc(o.customer.email)}</a><br>
+                ${esc(o.customer.address)}</p>
+            </div>
+            <div>
+              <span class="order-card__label">Items</span>
+              <p class="order-card__text">${items}</p>
+            </div>
+            <div>
+              <span class="order-card__label">UPI payment to check</span>
+              <div class="order-card__amount">${inr(o.totalInr)}</div>
+              <p class="order-card__utr">UTR ${esc(o.payment && o.payment.utr)}</p>
+              ${mismatch}
+            </div>
+          </div>
+          <footer class="order-card__actions">${actions}</footer>
+        </article>`;
+    }
+
+    function renderOrders() {
+      const counts = { pending: 0, approved: 0, rejected: 0, all: orders.length };
+      orders.forEach(o => { if (counts[o.status] !== undefined) counts[o.status] += 1; });
+      Object.entries(counts).forEach(([key, n]) => { document.getElementById('count-' + key).textContent = n; });
+
+      const approved = orders.filter(o => o.status === 'approved');
+      const revenue = approved.reduce((s, o) => s + o.totalInr, 0);
+      document.getElementById('stat-pending').textContent = counts.pending;
+      document.getElementById('stat-revenue').textContent = inr(revenue);
+      document.getElementById('stat-revenue-sub').textContent = approved.length ? 'From ' + approved.length + ' approved order' + (approved.length === 1 ? '' : 's') : 'No approved orders yet';
+      document.getElementById('stat-units').textContent = approved.reduce((s, o) => s + o.items.reduce((s2, i) => s2 + i.qty, 0), 0);
+      document.getElementById('stat-aov').textContent = inr(approved.length ? Math.round(revenue / approved.length) : 0);
+
+      const shown = currentFilter === 'all' ? orders : orders.filter(o => o.status === currentFilter);
+      const emptyText = {
+        pending: ['No payments to check', 'New orders appear here after a customer pays by UPI and submits the payment reference.'],
+        approved: ['No approved orders yet', 'Orders you approve move here.'],
+        rejected: ['No rejected orders', 'Orders you reject move here.'],
+        all: ['No orders yet', 'Orders appear here after a customer pays by UPI and submits the payment reference.'],
+      }[currentFilter];
+      ordersList.innerHTML = shown.length
+        ? shown.map(orderCardHtml).join('')
+        : `<div class="empty-state"><p class="empty-state__title">${emptyText[0]}</p><p class="empty-state__body">${emptyText[1]}</p></div>`;
+
+      // Revenue by product, from approved orders
+      const byProduct = {};
+      approved.forEach(o => o.items.forEach(i => {
+        byProduct[i.name] = (byProduct[i.name] || 0) + i.lineTotalInr;
+      }));
+      const chartWrap = document.getElementById('chart-wrap');
+      const entries = Object.entries(byProduct);
+      const maxRev = Math.max(1, ...entries.map(([, v]) => v));
+      chartWrap.innerHTML = entries.length
+        ? entries.map(([name, rev]) => `
+            <div class="chart-row">
+              <span class="chart-row__label">${esc(name)}</span>
+              <div class="chart-row__track"><div class="chart-row__fill" style="width:${Math.round((rev / maxRev) * 100)}%"></div></div>
+              <span class="chart-row__val">${inr(rev)}</span>
+            </div>`).join('')
+        : `<div class="empty-state"><p class="empty-state__title">No sales yet</p><p class="empty-state__body">Revenue appears here once you approve an order.</p></div>`;
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderOrders();
+      });
+    });
+
+    document.getElementById('refresh-orders-btn').addEventListener('click', async e => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      await loadOrders();
+      btn.disabled = false;
+    });
+
+    ordersList.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-set-status]');
+      if (!btn) return;
+      const id = btn.dataset.order;
+      const status = btn.dataset.setStatus;
+      btn.closest('.order-card').querySelectorAll('.action-btn').forEach(b => { b.disabled = true; });
+      try {
+        const data = await api('/api/admin/orders', { method: 'POST', body: JSON.stringify({ id, status }) });
+        orders = orders.map(o => (o.id === id ? data.order : o));
+        renderOrders();
+        showToast({ approved: 'Order ' + id + ' approved', rejected: 'Order ' + id + ' rejected', pending: 'Order ' + id + ' moved back to pending' }[status]);
+      } catch (err) {
+        if (err.message === 'logged out') return;
+        showToast(err.message === 'Failed to fetch' ? 'No connection. The order was not changed.' : err.message);
+        renderOrders();
+      }
     });
 
     // ── PRODUCTS ──────────────────────────────────────────
@@ -598,7 +757,7 @@
 
       wscSaveProducts(products);
       renderProducts();
-      showToast(p.name + ' saved — live on the storefront');
+      showToast(p.name + ' saved in this browser');
     });
 
     document.getElementById('reset-products-btn').addEventListener('click', () => {
@@ -615,7 +774,7 @@
       const products = wscLoadProducts();
       const p = products.find(x => x.id === btn.dataset.delete);
       if (!p) return;
-      if (!confirm(`Delete "${p.name}"? This removes it from the catalogue immediately. This cannot be undone.`)) return;
+      if (!confirm(`Delete "${p.name}"? This removes it from the catalogue in this browser. This cannot be undone.`)) return;
       wscSaveProducts(products.filter(x => x.id !== p.id));
       renderProducts();
       showToast(p.name + ' deleted');
@@ -656,7 +815,7 @@
         priceUsd,
         discountPct: 0,
         inStock,
-        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXXL'],
       };
       products.push(newProduct);
       wscSaveProducts(products);
@@ -672,8 +831,11 @@
       document.getElementById('new-instock-label').textContent = 'In Stock';
       addProductCard.style.display = 'none';
 
-      showToast(name + ' added — live on the storefront');
+      showToast(name + ' added in this browser');
     });
+
+    // Reopen the dashboard for a session saved earlier in this tab. Runs last, once everything above is defined.
+    if (session) enterDashboard();
   </script>
 </body>
 </html>

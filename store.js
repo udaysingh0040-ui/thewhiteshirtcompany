@@ -1,34 +1,19 @@
 /**
- * WSC shared data layer — products & orders persisted to localStorage.
- * Used by catalogue.html (storefront) and admin.html (dashboard) so that
- * edits made in the admin panel are reflected on the storefront in this
- * same browser. There is no backend/database here — this is local to the
- * current browser only, not shared across visitors or devices.
+ * WSC shared data layer, loaded by every page.
+ * - Products and the cart live in this browser's localStorage.
+ *   Product edits made in admin.html apply only in the browser they were made in.
+ * - Orders are sent to the order server (orders-api/ in this project, hosted on Vercel)
+ *   and are reviewed and approved in admin.html.
  */
 
-const WSC_PRODUCTS_KEY = 'wsc_products_v1';
-const WSC_ORDERS_KEY = 'wsc_orders_v1';
+const WSC_PRODUCTS_KEY = 'wsc_products_v2'; // v2: new prices and XXXL; ignores product edits saved under v1
 const WSC_CART_KEY = 'wsc_cart_v1';
 
-// Checkout hands each order to this WhatsApp number (country code + number, digits only).
-const WSC_ORDER_WHATSAPP = '919971972588';
+// Order server. Prices charged at checkout are also set there (orders-api/lib/shared.js).
+const WSC_API_BASE = 'https://wsc-orders.vercel.app';
 
-function wscOrderWhatsAppUrl(order) {
-  const inr = n => '₹' + Number(n).toLocaleString('en-IN');
-  const lines = [
-    "Hello, I'd like to place an order with The White Shirt Company.",
-    '',
-    'Order ' + order.id,
-    ...order.items.map(i => '- ' + i.name + ', size ' + i.size + ' x ' + i.qty + ': ' + inr(i.priceInr * i.qty)),
-    'Total: ' + inr(order.totalInr),
-    '',
-    'Name: ' + order.customer.name,
-    'Phone: ' + order.customer.phone,
-    'Email: ' + order.customer.email,
-    'Address: ' + order.customer.address,
-  ];
-  return 'https://wa.me/' + WSC_ORDER_WHATSAPP + '?text=' + encodeURIComponent(lines.join('\n'));
-}
+// UPI account that receives payments; matches website_images/upi-qr.png.
+const WSC_UPI = { id: '8168318654@kotak', payee: 'THE WHITE SHIRT COMPANY' };
 
 const WSC_DEFAULT_PRODUCTS = [
   {
@@ -42,11 +27,11 @@ const WSC_DEFAULT_PRODUCTS = [
       'catalogue/cotton%20shirt/cotton_shirt_men.jpg',
       'catalogue/cotton%20shirt/cotton_shirt%20(2).jpeg',
     ],
-    priceInr: 2400,
-    priceUsd: 29,
+    priceInr: 1200,
+    priceUsd: 15,
     discountPct: 0,
     inStock: true,
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXXL'],
   },
   {
     id: 'linen-shirt',
@@ -60,11 +45,11 @@ const WSC_DEFAULT_PRODUCTS = [
       'catalogue/Linen_shirt/linen_shirt_3.jpeg',
       'catalogue/Linen_shirt/linen_shirt_men.jpg',
     ],
-    priceInr: 2800,
-    priceUsd: 34,
+    priceInr: 2100,
+    priceUsd: 25,
     discountPct: 0,
     inStock: true,
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXXL'],
   },
 ];
 
@@ -118,9 +103,20 @@ function wscUniqueProductId(name, existingProducts) {
 }
 
 // ── CART (shared across every page so a visitor's cart survives navigation) ──
+// Items are re-priced from the current product list on every load, so a cart saved
+// before a price change never shows or charges the old price.
 function wscLoadCart() {
-  try { return JSON.parse(localStorage.getItem(WSC_CART_KEY)) || []; }
-  catch (e) { return []; }
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(WSC_CART_KEY)) || []; }
+  catch (e) { saved = []; }
+  const products = wscLoadProducts();
+  return saved
+    .map(item => {
+      const product = products.find(p => p.id === item.id);
+      if (!product) return null;
+      return { ...item, name: product.name, priceInr: wscDiscountedPrice(product.priceInr, product.discountPct), priceUsd: product.priceUsd };
+    })
+    .filter(Boolean);
 }
 
 function wscSaveCart(cart) {
@@ -131,18 +127,28 @@ function wscCartCount(cart) {
   return (cart || wscLoadCart()).reduce((s, i) => s + i.qty, 0);
 }
 
-function wscLoadOrders() {
-  try { return JSON.parse(localStorage.getItem(WSC_ORDERS_KEY)) || []; }
-  catch (e) { return []; }
+// ── ORDERS ──
+// Order reference shown to the customer and added to the UPI payment note.
+function wscNewOrderId() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const bytes = crypto.getRandomValues(new Uint8Array(6));
+  return 'WSC-' + Array.from(bytes, b => alphabet[b % alphabet.length]).join('');
 }
 
-function wscAddOrder(order) {
-  const orders = wscLoadOrders();
-  orders.unshift(order);
-  localStorage.setItem(WSC_ORDERS_KEY, JSON.stringify(orders));
-  return orders;
+// Opens a UPI app with the payee, amount and order reference filled in (phones only).
+function wscUpiPayUrl(amountInr, orderId) {
+  return 'upi://pay?pa=' + WSC_UPI.id
+    + '&pn=' + encodeURIComponent(WSC_UPI.payee)
+    + '&am=' + Number(amountInr).toFixed(2)
+    + '&cu=INR&tn=' + encodeURIComponent('Order ' + orderId);
 }
 
-function wscClearOrders() {
-  localStorage.removeItem(WSC_ORDERS_KEY);
+async function wscSubmitOrder(payload) {
+  const response = await fetch(WSC_API_BASE + '/api/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => ({}));
+  return { ok: response.ok, status: response.status, data };
 }
